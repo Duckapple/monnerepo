@@ -1,4 +1,4 @@
-import { parse } from 'svelte/compiler';
+import { parse, type AST } from 'svelte/compiler';
 import { walk } from 'estree-walker';
 
 export async function load({ params: { component } }) {
@@ -17,7 +17,7 @@ export async function load({ params: { component } }) {
 
 	let isProps = false;
 	walk(ast, {
-		enter(node) {
+		enter(node: AST.SvelteNode) {
 			if (node.type === 'TSInterfaceDeclaration') {
 				isProps = !!node.id?.name?.includes('Props');
 			}
