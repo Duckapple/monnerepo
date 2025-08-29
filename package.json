@@ -8,7 +8,7 @@
 	"workspaces": {
 		"packages": [
 			"app/*",
-			"lib/*"
+			"lib"
 		],
 		"catalog": {
 			"@eslint/compat": "^1.2.5",

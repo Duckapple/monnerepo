@@ -1,4 +1,4 @@
-@import '@sgk/ui/global.css';
+@import '@sgk/lib/global.css';
 
 @utility trapeze-* {
 	aspect-ratio: 3/2;

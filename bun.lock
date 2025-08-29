@@ -44,7 +44,7 @@
         "svelte": "catalog:",
       },
     },
-    "lib/ui": {
+    "lib": {
       "name": "@sgk/lib",
       "version": "0.0.1",
       "devDependencies": {
@@ -278,7 +278,7 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.40.2", "", { "os": "win32", "cpu": "x64" }, "sha512-bwspbWB04XJpeElvsp+DCylKfF4trJDa2Y9Go8O6A7YLX2LIKGcNK/CYImJN6ZP4DcuOHB4Utl3iCbnR62DudA=="],
 
-    "@sgk/lib": ["@sgk/lib@workspace:lib/ui"],
+    "@sgk/lib": ["@sgk/lib@workspace:lib"],
 
     "@sgk/ludo": ["@sgk/ludo@workspace:app/ludo"],
 
