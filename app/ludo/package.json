@@ -15,7 +15,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sgk/ui": "workspace:*"
+		"@sgk/lib": "workspace:*"
 	},
 	"peerDependencies": {
 		"svelte": "catalog:"

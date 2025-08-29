@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '@sgk/ui';
+	import { Button } from '@sgk/lib';
 	import Piece from '$lib/components/piece.svelte';
 
 	let pos = $state({ x: 0, y: 0 });

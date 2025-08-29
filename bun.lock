@@ -8,7 +8,7 @@
       "name": "@sgk/ludo",
       "version": "0.0.1",
       "dependencies": {
-        "@sgk/ui": "workspace:*",
+        "@sgk/lib": "workspace:*",
       },
       "devDependencies": {
         "@eslint/compat": "catalog:",
@@ -45,7 +45,7 @@
       },
     },
     "lib/ui": {
-      "name": "@sgk/ui",
+      "name": "@sgk/lib",
       "version": "0.0.1",
       "devDependencies": {
         "@eslint/compat": "catalog:",
@@ -278,9 +278,9 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.40.2", "", { "os": "win32", "cpu": "x64" }, "sha512-bwspbWB04XJpeElvsp+DCylKfF4trJDa2Y9Go8O6A7YLX2LIKGcNK/CYImJN6ZP4DcuOHB4Utl3iCbnR62DudA=="],
 
-    "@sgk/ludo": ["@sgk/ludo@workspace:app/ludo"],
+    "@sgk/lib": ["@sgk/lib@workspace:lib/ui"],
 
-    "@sgk/ui": ["@sgk/ui@workspace:lib/ui"],
+    "@sgk/ludo": ["@sgk/ludo@workspace:app/ludo"],
 
     "@standard-schema/spec": ["@standard-schema/spec@1.0.0", "", {}, "sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA=="],
 
