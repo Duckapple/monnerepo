@@ -5,7 +5,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: [vitePreprocess(), mdsvex()],
-	kit: { adapter: adapter(), alias: { $ui: 'src/lib/index.ts' } },
+	kit: { adapter: adapter() },
 	extensions: ['.svelte', '.svx'],
 	compilerOptions: {
 		runes: true

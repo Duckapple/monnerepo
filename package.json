@@ -3,7 +3,8 @@
 	"private": true,
 	"scripts": {
 		"apps": "bun --bun --filter './app/*'",
-		"all": "bun --bun --filter '*'"
+		"all": "bun --bun --filter '*'",
+		"lint": "prettier --check . && eslint ."
 	},
 	"workspaces": {
 		"packages": [

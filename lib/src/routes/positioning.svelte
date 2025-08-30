@@ -1,15 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
-	interface Props {}
-	let {}: Props = $props();
-
 	let squares = $state<HTMLElement[]>([]);
 
 	let piece = $state<HTMLElement>();
 
-	const moveSequence = [5, 84, 69, 24, 51, 98];
-	let index = $state(0);
+	// const moveSequence = [5, 84, 69, 24, 51, 98];
+	// let index = $state(0);
 
 	// $effect(() => {
 	// 	const x = setInterval(() => {
@@ -45,26 +40,27 @@
 	}
 
 	type MS = number;
-	function sequenceSync(target: HTMLElement, list: { el: HTMLElement; d: MS }[], cb?: () => void) {
-		const [element, ...rest] = list;
-		if (!element) return cb?.();
-		const { el, d } = element;
-		setTimeout(() => {
-			const { offsetLeft, offsetTop } = el;
-			target.style = `translate: ${offsetLeft}px ${offsetTop}px;`;
-			sequenceSync(target, rest);
-		}, d);
-	}
+	// function sequenceSync(target: HTMLElement, list: { el: HTMLElement; d: MS }[], cb?: () => void) {
+	// 	const [element, ...rest] = list;
+	// 	if (!element) return cb?.();
+	// 	const { el, d } = element;
+	// 	setTimeout(() => {
+	// 		const { offsetLeft, offsetTop } = el;
+	// 		target.style = `translate: ${offsetLeft}px ${offsetTop}px;`;
+	// 		sequenceSync(target, rest);
+	// 	}, d);
+	// }
 
-	async function sequence(target: HTMLElement, list: { el: HTMLElement; d: MS }[]) {
-		return new Promise((res) => {
-			sequenceSync(target, list, () => res(console.log('done')));
-		});
-	}
+	// async function sequence(target: HTMLElement, list: { el: HTMLElement; d: MS }[]) {
+	// 	return new Promise((res) => {
+	// 		sequenceSync(target, list, () => res(console.log('done')));
+	// 	});
+	// }
 </script>
 
 <div class="grid grid-cols-10 gap-2">
-	{#each Array(100).keys() as i}
+	{#each Array(100).keys() as i (i)}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			bind:this={squares[i]}
 			onmousedown={moveToTarget}

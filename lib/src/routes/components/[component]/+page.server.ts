@@ -13,7 +13,7 @@ export async function load({ params: { component } }) {
 	// Bun.file('./ast.json').write(JSON.stringify(ast, null, 2));
 	console.dir(ast, { depth: Infinity });
 
-	const params: { key: string; defaultValue?: any; options?: string[] }[] = [];
+	const params: { key: string; defaultValue?: unknown; options?: string[] }[] = [];
 
 	let isProps = false;
 	walk(ast, {

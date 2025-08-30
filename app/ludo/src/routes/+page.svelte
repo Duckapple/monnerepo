@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '@sgk/lib';
+	import { Button } from '@sgk/lib/ui';
 	import Piece from '$lib/components/piece.svelte';
 
 	let pos = $state({ x: 0, y: 0 });
@@ -37,14 +37,13 @@
 		mouseState.yOffset = pos.y;
 	}
 	function end(_: MouseEvent | TouchEvent) {
-		mouseState.xInitial = pos.x;
-		mouseState.yInitial = pos.y;
-
 		mouseState.dragging = false;
 	}
 </script>
 
 <svelte:window onmousemove={move} ontouchmove={move} onmouseup={end} ontouchend={end} />
+
+<Button>click me</Button>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div

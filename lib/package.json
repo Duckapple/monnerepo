@@ -31,6 +31,8 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		},
+		"./ui": "./src/lib/ui/_.ts",
+		"./hooks": "./src/lib/hooks/_.ts",
 		"./global.css": "./global.css"
 	},
 	"peerDependencies": {

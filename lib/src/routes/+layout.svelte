@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import * as UI from '$ui';
+	import * as UI from '$lib/ui/_.ts';
 
 	let { children } = $props();
 </script>
@@ -14,7 +14,7 @@
 			<summary class="text-xl">Components</summary>
 
 			<ul class="pl-6">
-				{#each Object.keys(UI) as component}
+				{#each Object.keys(UI) as component (component)}
 					<li>
 						<UI.Link href="/components/{component}">
 							{'<'}{component}{' />'}

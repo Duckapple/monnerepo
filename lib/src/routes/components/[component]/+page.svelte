@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as UI from '$ui';
+	import * as UI from '$lib/ui/_.ts';
 	import type { Component } from 'svelte';
 
 	let { data } = $props();
