@@ -7,4 +7,8 @@
 	initStores();
 </script>
 
-{@render children?.()}
+<div class="p-8">
+	<div class="relative">
+		{@render children?.()}
+	</div>
+</div>

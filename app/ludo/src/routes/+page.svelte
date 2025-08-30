@@ -1,56 +1,16 @@
 <script lang="ts">
-	import { Button } from '@sgk/lib/ui';
 	import Piece from '$lib/components/piece.svelte';
-
-	let itemState = $state({ x: 0, y: 0, item: null as HTMLElement | null });
-	let mouseState = $state({ dragging: false, xInitial: 0, yInitial: 0 });
-
-	function isTouch(e: MouseEvent | TouchEvent): e is TouchEvent {
-		return e.type === 'touchstart' || e.type === 'touchmove' || e.type === 'touchend';
-	}
-	function start(e: MouseEvent | TouchEvent) {
-		if (isTouch(e)) {
-			mouseState.xInitial = (e.touches[0]?.clientX ?? 0) - itemState.x;
-			mouseState.yInitial = (e.touches[0]?.clientY ?? 0) - itemState.y;
-		} else {
-			mouseState.xInitial = e.clientX - itemState.x;
-			mouseState.yInitial = e.clientY - itemState.y;
-		}
-
-		mouseState.dragging = true;
-	}
-	function move(e: MouseEvent | TouchEvent) {
-		if (!mouseState.dragging) return;
-
-		e.preventDefault();
-
-		if (isTouch(e)) {
-			itemState.x = (e.touches[0]?.clientX ?? 0) - mouseState.xInitial;
-			itemState.y = (e.touches[0]?.clientY ?? 0) - mouseState.yInitial;
-		} else {
-			itemState.x = e.clientX - mouseState.xInitial;
-			itemState.y = e.clientY - mouseState.yInitial;
-		}
-	}
-	function end(_: MouseEvent | TouchEvent) {
-		mouseState.dragging = false;
-	}
+	import { useMove } from '$lib/hooks/use-move.svelte.ts';
 </script>
 
-<svelte:window onmousemove={move} ontouchmove={move} onmouseup={end} ontouchend={end} />
-
-<Button>click me</Button>
-
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	bind:this={itemState.item}
-	class="size-24 select-none"
-	style="transform: translate3d({itemState.x}px, {itemState.y}px, 0);"
-	onmousedown={start}
-	ontouchstart={start}
->
-	<Piece class="size-24 text-green-600" />
-</div>
+{#each ['text-green-600', 'text-red-600', 'text-blue-600', 'text-yellow-600'] as color}
+	{#each Array(4).keys()}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div class="absolute size-24 select-none" {...useMove()}>
+			<Piece class="size-24 {color}" />
+		</div>
+	{/each}
+{/each}
 
 <div class="grid w-196 grid-cols-11 gap-2">
 	<div class="col-span-4 row-span-4 flex rounded-4xl bg-red-500">
