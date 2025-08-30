@@ -2,20 +2,19 @@
 	import { Button } from '@sgk/lib/ui';
 	import Piece from '$lib/components/piece.svelte';
 
-	let pos = $state({ x: 0, y: 0 });
-	let dragItem = $state<HTMLElement | null>(null);
-	let mouseState = $state({ dragging: false, xOffset: 0, yOffset: 0, xInitial: 0, yInitial: 0 });
+	let itemState = $state({ x: 0, y: 0, item: null as HTMLElement | null });
+	let mouseState = $state({ dragging: false, xInitial: 0, yInitial: 0 });
 
 	function isTouch(e: MouseEvent | TouchEvent): e is TouchEvent {
 		return e.type === 'touchstart' || e.type === 'touchmove' || e.type === 'touchend';
 	}
 	function start(e: MouseEvent | TouchEvent) {
 		if (isTouch(e)) {
-			mouseState.xInitial = (e.touches[0]?.clientX ?? 0) - mouseState.xOffset;
-			mouseState.yInitial = (e.touches[0]?.clientY ?? 0) - mouseState.yOffset;
+			mouseState.xInitial = (e.touches[0]?.clientX ?? 0) - itemState.x;
+			mouseState.yInitial = (e.touches[0]?.clientY ?? 0) - itemState.y;
 		} else {
-			mouseState.xInitial = e.clientX - mouseState.xOffset;
-			mouseState.yInitial = e.clientY - mouseState.yOffset;
+			mouseState.xInitial = e.clientX - itemState.x;
+			mouseState.yInitial = e.clientY - itemState.y;
 		}
 
 		mouseState.dragging = true;
@@ -26,15 +25,12 @@
 		e.preventDefault();
 
 		if (isTouch(e)) {
-			pos.x = (e.touches[0]?.clientX ?? 0) - mouseState.xInitial;
-			pos.y = (e.touches[0]?.clientY ?? 0) - mouseState.yInitial;
+			itemState.x = (e.touches[0]?.clientX ?? 0) - mouseState.xInitial;
+			itemState.y = (e.touches[0]?.clientY ?? 0) - mouseState.yInitial;
 		} else {
-			pos.x = e.clientX - mouseState.xInitial;
-			pos.y = e.clientY - mouseState.yInitial;
+			itemState.x = e.clientX - mouseState.xInitial;
+			itemState.y = e.clientY - mouseState.yInitial;
 		}
-
-		mouseState.xOffset = pos.x;
-		mouseState.yOffset = pos.y;
 	}
 	function end(_: MouseEvent | TouchEvent) {
 		mouseState.dragging = false;
@@ -47,9 +43,9 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	bind:this={dragItem}
+	bind:this={itemState.item}
 	class="size-24 select-none"
-	style="transform: translate3d({pos.x}px, {pos.y}px, 0);"
+	style="transform: translate3d({itemState.x}px, {itemState.y}px, 0);"
 	onmousedown={start}
 	ontouchstart={start}
 >
