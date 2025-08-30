@@ -39,7 +39,7 @@
 		piece.style = `translate: ${offsetLeft}px ${offsetTop}px;`;
 	}
 
-	type MS = number;
+	// type MS = number;
 	// function sequenceSync(target: HTMLElement, list: { el: HTMLElement; d: MS }[], cb?: () => void) {
 	// 	const [element, ...rest] = list;
 	// 	if (!element) return cb?.();

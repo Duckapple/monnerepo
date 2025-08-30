@@ -21,7 +21,7 @@ class MoveStore {
 		}
 	}
 
-	#end(_: MouseEvent | TouchEvent) {
+	#end() {
 		this.item = null;
 	}
 

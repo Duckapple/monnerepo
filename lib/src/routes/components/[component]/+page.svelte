@@ -22,7 +22,7 @@
 		<div class="mx-auto grid grid-cols-2 gap-2">
 			<span class="min-w-sm">Property</span>
 			<span>Value</span>
-			{#each data.params as { key, options, defaultValue }}
+			{#each data.params as { key, options, defaultValue } (key)}
 				<span class="py-1 font-mono font-semibold">{key}</span>
 				<div>
 					{#if options?.length}
@@ -32,7 +32,7 @@
 							id="{key}-options"
 							bind:value={params[key]}
 						>
-							{#each options as option}
+							{#each options as option (option)}
 								<option value={option} selected={defaultValue === option ? true : undefined}>
 									{option}
 								</option>
@@ -46,7 +46,7 @@
 							bind:value={params[key]}
 						/>
 					{:else if typeof defaultValue === 'boolean'}
-						<input type="checkbox" bind:checked={params[key]} />
+						<input type="checkbox" bind:checked={params[key] as boolean} />
 					{/if}
 				</div>
 			{/each}

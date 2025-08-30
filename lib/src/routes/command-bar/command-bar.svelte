@@ -23,7 +23,7 @@
 	interface Props {
 		open?: boolean;
 		textValue?: string;
-		commands: Command[];
+		// commands: Command[];
 	}
 	let { open = $bindable(false), textValue = $bindable('') }: Props = $props();
 

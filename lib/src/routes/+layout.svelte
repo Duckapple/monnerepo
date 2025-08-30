@@ -17,7 +17,7 @@
 				{#each Object.keys(UI) as component (component)}
 					<li>
 						<UI.Link href="/components/{component}">
-							{'<'}{component}{' />'}
+							&lt;{component} /&gt;
 						</UI.Link>
 					</li>
 				{/each}
