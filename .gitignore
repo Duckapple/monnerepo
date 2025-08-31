@@ -42,3 +42,6 @@ Thumbs.db
 
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Generated files
+.drizzle/scripts/app-schemas.ts
