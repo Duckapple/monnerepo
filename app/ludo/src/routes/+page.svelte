@@ -3,7 +3,7 @@
 	import { useMove } from '$lib/hooks/use-move.svelte.ts';
 </script>
 
-{#each ['text-green-600', 'text-red-600', 'text-blue-600', 'text-yellow-600'] as color (color)}
+{#each ['text-red-600', 'text-green-600', 'text-blue-600', 'text-yellow-600'] as color (color)}
 	{#each Array(4).keys() as i (i)}
 		<div class="absolute size-24 select-none" {...useMove()}>
 			<Piece class="size-24 {color}" />
