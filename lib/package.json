@@ -33,6 +33,7 @@
 		},
 		"./ui": "./src/lib/ui/_.ts",
 		"./hooks": "./src/lib/hooks/_.ts",
+		"./db": "./src/lib/db/schema.ts",
 		"./global.css": "./global.css"
 	},
 	"peerDependencies": {
@@ -49,12 +50,15 @@
 		"@tailwindcss/vite": "catalog:",
 		"@testing-library/jest-dom": "catalog:",
 		"@testing-library/svelte": "catalog:",
+		"drizzle-kit": "catalog:",
+		"drizzle-orm": "catalog:",
 		"eslint": "catalog:",
 		"eslint-config-prettier": "catalog:",
 		"eslint-plugin-svelte": "catalog:",
 		"globals": "catalog:",
 		"jsdom": "catalog:",
 		"mdsvex": "catalog:",
+		"postgres": "catalog:",
 		"prettier": "catalog:",
 		"prettier-plugin-svelte": "catalog:",
 		"prettier-plugin-tailwindcss": "catalog:",
