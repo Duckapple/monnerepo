@@ -1,7 +1,18 @@
 <script lang="ts">
 	import Piece from '$lib/components/piece.svelte';
 	import { useMove } from '$lib/hooks/use-move.svelte.ts';
+	import { getUsers } from './test.remote.ts';
 </script>
+
+<div class="absolute right-0">
+	<svelte:boundary>
+		{#snippet pending()}aaaaaaaa{/snippet}
+		{#snippet onerror(e, reset)}
+			{JSON.stringify(e)}
+		{/snippet}
+		{JSON.stringify(await getUsers())}
+	</svelte:boundary>
+</div>
 
 {#each ['text-red-600', 'text-green-600', 'text-blue-600', 'text-yellow-600'] as color (color)}
 	{#each Array(4).keys() as i (i)}

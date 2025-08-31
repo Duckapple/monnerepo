@@ -1,7 +1,6 @@
 import { query } from '$app/server';
-import { readdir } from 'fs/promises';
+import { db } from '$lib/db/db.server.ts';
 
-export const getFs = query(async () => {
-	const files = await readdir('.');
-	return files;
+export const getUsers = query(async () => {
+	return db.selectFrom('User').select(['userName']).limit(1).execute();
 });
