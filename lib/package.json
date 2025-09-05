@@ -72,6 +72,7 @@
 		"tailwindcss": "catalog:",
 		"typescript": "catalog:",
 		"typescript-eslint": "catalog:",
+		"valibot": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:"
 	}

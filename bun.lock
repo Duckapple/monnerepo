@@ -49,6 +49,52 @@
         "svelte": "catalog:",
       },
     },
+    "app/quiz": {
+      "name": "@sgk/quiz",
+      "version": "0.0.1",
+      "dependencies": {
+        "@sgk/lib": "workspace:*",
+      },
+      "devDependencies": {
+        "@eslint/compat": "catalog:",
+        "@eslint/js": "catalog:",
+        "@sveltejs/adapter-auto": "catalog:",
+        "@sveltejs/kit": "catalog:",
+        "@sveltejs/package": "catalog:",
+        "@sveltejs/vite-plugin-svelte": "catalog:",
+        "@tailwindcss/typography": "catalog:",
+        "@tailwindcss/vite": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/svelte": "catalog:",
+        "@types/pg": "catalog:",
+        "drizzle-kit": "catalog:",
+        "drizzle-orm": "catalog:",
+        "eslint": "catalog:",
+        "eslint-config-prettier": "catalog:",
+        "eslint-plugin-svelte": "catalog:",
+        "globals": "catalog:",
+        "jsdom": "catalog:",
+        "kysely": "catalog:",
+        "mdsvex": "catalog:",
+        "pg": "catalog:",
+        "prettier": "catalog:",
+        "prettier-plugin-svelte": "catalog:",
+        "prettier-plugin-tailwindcss": "catalog:",
+        "publint": "catalog:",
+        "svelte": "catalog:",
+        "svelte-adapter-bun": "catalog:",
+        "svelte-check": "catalog:",
+        "tailwindcss": "catalog:",
+        "typescript": "catalog:",
+        "typescript-eslint": "catalog:",
+        "valibot": "catalog:",
+        "vite": "catalog:",
+        "vitest": "catalog:",
+      },
+      "peerDependencies": {
+        "svelte": "catalog:",
+      },
+    },
     "lib": {
       "name": "@sgk/lib",
       "version": "0.0.1",
@@ -127,6 +173,7 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.20.0",
+    "valibot": "^1.1.0",
     "vite": "^6.2.6",
     "vitest": "^3.0.0",
   },
@@ -302,6 +349,8 @@
     "@sgk/lib": ["@sgk/lib@workspace:lib"],
 
     "@sgk/ludo": ["@sgk/ludo@workspace:app/ludo"],
+
+    "@sgk/quiz": ["@sgk/quiz@workspace:app/quiz"],
 
     "@standard-schema/spec": ["@standard-schema/spec@1.0.0", "", {}, "sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA=="],
 
@@ -1020,6 +1069,8 @@
     "uri-js": ["uri-js@4.4.1", "", { "dependencies": { "punycode": "^2.1.0" } }, "sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg=="],
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
+
+    "valibot": ["valibot@1.1.0", "", { "peerDependencies": { "typescript": ">=5" }, "optionalPeers": ["typescript"] }, "sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw=="],
 
     "vary": ["vary@1.1.2", "", {}, "sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg=="],
 
