@@ -34,6 +34,7 @@
 		"./ui": "./src/lib/ui/_.ts",
 		"./hooks": "./src/lib/hooks/_.ts",
 		"./db": "./src/lib/db/_.ts",
+		"./utils": "./src/lib/utils/_.ts",
 		"./global.css": "./global.css"
 	},
 	"peerDependencies": {

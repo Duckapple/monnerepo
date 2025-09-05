@@ -1,17 +1,4 @@
-import {
-	type PgColumn,
-	char,
-	index,
-	json,
-	pgTable,
-	text,
-	varchar,
-	uuid
-} from 'drizzle-orm/pg-core';
-
-export function indicesOn<T extends string>(tableName: string, ...keys: T[]) {
-	return (table: { [P in T]: PgColumn }) => keys.map((key) => index(key + 'Index').on(table[key]));
-}
+import { char, index, json, pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core';
 
 export const User = pgTable('User', {
 	id: uuid('id').primaryKey().defaultRandom(),
