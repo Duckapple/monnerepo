@@ -1,13 +1,8 @@
 <script lang="ts">
-	import { client, jwt, user, userNames } from '$lib/main';
+	import { jwt, user, userNames } from '$lib/main';
 	import { readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import {
-		createMutation,
-		createQuery,
-		queryOptions,
-		useQueryClient,
-	} from '@tanstack/svelte-query';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 
 	import BuyModal from '$lib/compose/BuyModal.svelte';
 	import TakeModal from '$lib/compose/TakeModal.svelte';
@@ -15,9 +10,9 @@
 	import CardStack from '$lib/game/CardStack.svelte';
 	import Coin from '$lib/game/Coin.svelte';
 	import Person from '$lib/game/Person.svelte';
+	import Hand from '$lib/compose/Hand.svelte';
 
 	import { cardFromId } from '$common/defaults';
-	import Hand from '$lib/compose/Hand.svelte';
 	import { range } from '$common/utils';
 	import { moveTo } from '$lib/move';
 	import type { GameAndPlayers } from '$common/communication';
@@ -150,12 +145,12 @@
 	<title>Game</title>
 </svelte:head>
 
-<div class="flex flex-col gap-4 p-2 lg:flex-row md:p-4">
+<div class="flex flex-col gap-4 p-2 md:p-4 lg:flex-row">
 	<div class="flex flex-col md:flex-row">
 		<div class="space-y-3">
 			<div class="flex justify-center gap-2 md:gap-3">
 				{#each gameCache?.shown?.persons ?? [] as cardId (cardId)}
-					<Person card={cardFromId(cardId)} onclick={handleBuyCard} onkeypress={handleBuyCard} />
+					<Person card={cardFromId(cardId)} />
 				{/each}
 				<div class="h-14 md:h-32"></div>
 			</div>
@@ -178,13 +173,13 @@
 				{/each}
 			</div>
 		</div>
-		<div class="flex gap-3 py-6 pl-2 md:flex-col md:pt-12 md:pl-4 md:gap-6">
+		<div class="flex gap-3 py-6 pl-2 md:flex-col md:gap-6 md:pt-12 md:pl-4">
 			{#each gameCache?.tokens ?? [] as stackSize, color}
 				<Coin {color} {stackSize} onclick={handleCoin} onkeypress={handleCoin} />
 			{/each}
 		</div>
 	</div>
-	<div class="flex flex-wrap w-full gap-4">
+	<div class="flex w-full flex-wrap gap-4">
 		{#each gameCache?.players ?? [] as player}
 			<Hand
 				{player}
@@ -199,7 +194,7 @@
 		{/each}
 	</div>
 </div>
-<div class="absolute left-4 top-4 flex gap-2">
+<div class="absolute top-4 left-4 flex gap-2">
 	<!-- <details class="rounded-md md:w-auto open:bg-white">
 		<summary class="block cursor-pointer"> -->
 	<!-- prettier-ignore -->
@@ -213,7 +208,7 @@
 		</div>
 	</details> -->
 	<button onclick={() => $notify.mutate()}>
-		<Icon icon="bell" class="size-6 md:size-8 [stroke-width:1.5]" />
+		<Icon icon="bell" class="size-6 [stroke-width:1.5] md:size-8" />
 	</button>
 	<ColorblindToggle />
 	{#if gameCache?.phase === GamePhase.FINISHED}
@@ -226,17 +221,17 @@
 {#if gameCache?.phase === GamePhase.FINISHED && !hideOverlay}
 	<div
 		transition:fade={{ duration: 500 }}
-		class="fixed inset-0 flex items-center justify-center bg-slate-950 bg-opacity-75 z-10 select-none"
+		class="bg-opacity-75 fixed inset-0 z-10 flex items-center justify-center bg-slate-950 select-none"
 	>
-		<div class="text-white flex flex-col items-center gap-y-6 mb-64 sm:mb-0">
-			<h2 class="text-4xl text-center">Game Over</h2>
-			<div class="flex flex-col gap-y-4 gap-x-8 lg:grid grid-cols-2 text-center lg:text-left">
+		<div class="mb-64 flex flex-col items-center gap-y-6 text-white sm:mb-0">
+			<h2 class="text-center text-4xl">Game Over</h2>
+			<div class="flex grid-cols-2 flex-col gap-x-8 gap-y-4 text-center lg:grid lg:text-left">
 				{#each playersWithPoints ?? [] as player, i}
 					{@const delayIndex = (playersWithPoints?.length ?? 0) - i}
 					{#if showWinners}
 						<div
-							class="flex flex-col justify-center items-center {i === 0
-								? 'lg:items-end row-span-3'
+							class="flex flex-col items-center justify-center {i === 0
+								? 'row-span-3 lg:items-end'
 								: 'lg:items-start'} gap-1"
 							transition:fade={{ duration: 500, delay: 1000 + delayIndex * 2000 }}
 						>
@@ -255,11 +250,11 @@
 				>
 					<Button
 						onClick={() => (hideOverlay = !hideOverlay)}
-						class="bg-slate-800 border-slate-500"
+						class="border-slate-500 bg-slate-800"
 					>
 						Hide overlay
 					</Button>
-					<Button class="bg-slate-800 border-slate-500" href="/">Back to game list</Button>
+					<Button class="border-slate-500 bg-slate-800" href="/">Back to game list</Button>
 				</div>
 			{/if}
 		</div>

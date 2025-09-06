@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Card } from '$common/model';
-	import { bgColorOf } from '$lib/color';
+	import Icon from '$lib/base/Icon.svelte';
+	import { bgColorOf, iconOf } from '$lib/color';
+	import { useRuneContext } from '$lib/state/context-rune.svelte';
 	import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
 	interface Props {
 		card: Card;
@@ -21,22 +23,23 @@
 </script>
 
 <button
-	class="relative transition-transform border border-black rounded-lg select-none w-14 h-14 aspect-square bg-linear-to-br from-slate-50 to-slate-200 hover:scale-110 {buttonMd}"
+	class="relative aspect-square h-14 w-14 rounded-lg border border-black bg-linear-to-br from-slate-50 to-slate-200 transition-transform select-none hover:scale-110 {buttonMd}"
 	data-card-id={id}
 	{onclick}
 	{onkeypress}
 >
-	<span class="absolute top-0 text-3xl leading-none left-1 {pointsMd}">{p}</span>
-	<div class="absolute flex gap-0.5 leading-none left-1 bottom-1 {costsMd}">
+	<span class="absolute top-0 left-1 text-3xl leading-none {pointsMd}">{p}</span>
+	<div class="absolute bottom-1 left-1 flex gap-0.5 leading-none {costsMd}">
 		{#each cost as co, i}
 			{#if co}
-				<span class="p-[1pt] text-center border border-black rounded-xs {costMd} {bgColorOf[i]}">
+				{@const bg = bgColorOf[i]}
+				<span class={['relative rounded-xs border border-black p-[1pt] text-center', costMd, bg]}>
 					{co}
 				</span>
 			{/if}
 		{/each}
 	</div>
-	<span class="absolute top-0 right-0 text-2xl {personMd}">
+	<span class="absolute top-0 right-0 text-xl {personMd}">
 		{persons[id - 0xc0] ?? ''}
 	</span>
 </button>

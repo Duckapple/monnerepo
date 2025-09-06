@@ -129,7 +129,7 @@
 				} as const;
 
 				const res = await client.api.action({ id: game.id }).post(body);
-				if (res.error) {
+				if (res.error?.value.message) {
 					error = res.error.value.message;
 					return;
 				}
@@ -163,7 +163,7 @@
 				} as const;
 
 				const res = await client.api.action({ id: game.id }).post(body);
-				if (res.error) {
+				if (res.error?.value.message) {
 					error = res.error.value.message;
 					return;
 				}
@@ -227,7 +227,7 @@
 			{/if}
 		</div>
 	{/snippet}
-	<div class="w-56 h-56 md:w-[28rem] md:h-[28rem] flex justify-center items-center relative">
+	<div class="relative flex h-56 w-56 items-center justify-center md:h-[28rem] md:w-[28rem]">
 		{#if cardId}
 			<Card card={cardFromId(cardId)} style="transform: scale(2)" autofocus />
 		{/if}
