@@ -1,0 +1,26 @@
+import type { Static } from 'elysia';
+import { eq } from 'drizzle-orm';
+import { db } from '../common/db';
+import { FunctionError } from '../common/auth';
+import type { authSchema, loginSchema } from '../common/auth';
+import { User } from '@sgk/lib/db';
+
+export async function post(
+	{ userName, password }: Static<typeof loginSchema>,
+	sign: (i: Static<typeof authSchema>) => Promise<string>,
+	setCookie: (value: string) => void
+) {
+	const [user] = await db.select().from(User).where(eq(User.userName, userName));
+	if (user == null) {
+		throw new FunctionError(404, { message: 'User not found' });
+	}
+	if (!Bun.password.verifySync(password, user.bcrypt)) {
+		throw new FunctionError(401, { message: 'Wrong password' });
+	}
+
+	const newJwt = await sign({ id: user.id, userName: user.userName });
+
+	setCookie(newJwt);
+
+	return { jwt: newJwt };
+}

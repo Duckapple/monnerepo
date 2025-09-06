@@ -1,14 +1,6 @@
 import { boolean, timestamp, json, pgEnum, pgTable, smallint, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-
-type TokenHold = [number, number, number, number, number, number];
-interface IdDecks {
-	high: number[];
-	middle: number[];
-	low: number[];
-	persons: number[];
-}
-type GamePhase = 0 | 1 | 2 | 3;
+import type { GamePhase, IdDecks, TokenHold } from '$common/model';
 
 export const SplendorRoom = pgTable('SplendorRoom', {
 	id: uuid('id').primaryKey().defaultRandom(),

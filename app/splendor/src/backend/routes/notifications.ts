@@ -1,0 +1,22 @@
+import type { AuthUser } from '$common/communication';
+import { db } from '../common/db';
+import type { Infer } from '../common/type';
+import { push, subscription } from '../common/notifications';
+import { Push } from '@sgk/lib/db';
+
+post.params = { body: subscription };
+export async function post(user: AuthUser, req: Infer<typeof post.params>) {
+	const subscriptionInput = req.body;
+
+	await db.insert(Push).values({ userId: user.id, ...subscriptionInput });
+
+	const nonce = push(
+		{ userId: user.id, ...subscriptionInput },
+		{
+			message: "You've turned on notifications!",
+			type: 'notifications'
+		}
+	);
+
+	return { nonce };
+}
