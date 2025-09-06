@@ -9,17 +9,17 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			fallback: '404.html'
+			fallback: '404.html',
 		}),
 		alias: {
 			$backend: 'src/backend',
 			$common: 'src/common',
-			$db: 'src/db'
+			$db: 'src/db',
 		},
 		files: {
-			serviceWorker: 'src/service-worker'
-		}
-	}
+			serviceWorker: 'src/service-worker',
+		},
+	},
 };
 
 export default config;

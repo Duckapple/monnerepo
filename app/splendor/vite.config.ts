@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
-		port: 5175
-	}
+		port: 5175,
+	},
+	ssr: { noExternal: true },
 });
