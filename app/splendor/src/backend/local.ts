@@ -12,10 +12,10 @@ import * as registerRoutes from '$backend/routes/register';
 import * as notificationsRoutes from '$backend/routes/notifications';
 import * as joinRoutes from '$backend/routes/join';
 
-const PORT = process.env.PORT;
+const PORT = process.env.SPLENDOR_PORT;
 
 if (!PORT) {
-	console.error(new Date(), '[fatal]', 'PORT was not defined in .env!');
+	console.error(new Date(), '[fatal]', 'SPLENDOR_PORT was not defined in .env!');
 	throw new Error();
 }
 
