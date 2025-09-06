@@ -8,7 +8,7 @@ export const SplendorRoom = pgTable('SplendorRoom', {
 	started: boolean('started').default(false),
 	ended: boolean('ended').default(false),
 	createdAt: timestamp('createdAt', { precision: 0 }).notNull().defaultNow(),
-	updatedAt: timestamp('updatedAt', { precision: 0 }).notNull().defaultNow()
+	updatedAt: timestamp('updatedAt', { precision: 0 }).notNull().defaultNow(),
 });
 
 export type SplendorRoom = typeof SplendorRoom.$inferSelect;
@@ -33,6 +33,8 @@ export const SplendorGame = pgTable("SplendorGame", {
   turn: smallint("turn").notNull().default(0).$type<0 | 1 | 2 | 3>(),
   playerCount: smallint("playerCount").notNull().$type<1 | 2 | 3 | 4>(),
 	phase: smallint("phase").notNull().default(0).$type<GamePhase>(),
+	createdAt: timestamp('createdAt', { precision: 0 }).notNull().defaultNow(),
+	updatedAt: timestamp('updatedAt', { precision: 0 }).notNull().defaultNow(),
 });
 export type SplendorGame = typeof SplendorGame.$inferSelect;
 
@@ -42,7 +44,7 @@ export const SplendorGameSelect = {
 	tokens: SplendorGame.tokens,
 	turn: SplendorGame.turn,
 	playerCount: SplendorGame.playerCount,
-	phase: SplendorGame.phase
+	phase: SplendorGame.phase,
 };
 export type SplendorGameSelect = typeof SplendorGameSelect;
 
@@ -55,7 +57,7 @@ export const SplendorAction = pgTable('SplendorAction', {
 	userId: uuid('userId').notNull(),
 	timestamp: timestamp('timestamp', { precision: 0 }).notNull().defaultNow(),
 	type: SplendorActionType('type').notNull(),
-	data: json('data').notNull()
+	data: json('data').notNull(),
 });
 
 export type SplendorAction = typeof SplendorAction.$inferSelect;
