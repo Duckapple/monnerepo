@@ -1,4 +1,4 @@
-# web-monorepo
+# monnerepo
 
 To install dependencies:
 
