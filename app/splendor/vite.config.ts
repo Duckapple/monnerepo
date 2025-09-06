@@ -7,5 +7,7 @@ export default defineConfig({
 	server: {
 		port: 5175,
 	},
-	ssr: { noExternal: true },
+	// In dev, we just want normal deps, but when building,
+	// we want a bundle with everything so we don't need to `bun i` on server
+	ssr: { noExternal: !!process.env.BUILDING || undefined },
 });
