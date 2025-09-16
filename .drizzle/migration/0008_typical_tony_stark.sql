@@ -1,0 +1,1 @@
+ALTER TABLE "LobbyParticipant" ADD COLUMN "order" integer;

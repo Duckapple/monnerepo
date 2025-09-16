@@ -10,6 +10,7 @@ import {
 	timestamp,
 	boolean,
 	foreignKey,
+	integer,
 } from 'drizzle-orm/pg-core';
 
 // #region User
@@ -61,6 +62,7 @@ export const LobbyParticipant = pgTable(
 		userId: uuid('userId').notNull(),
 		joinedAt: timestamp('joinedAt').notNull().defaultNow(),
 		owner: boolean('owner').notNull().default(false),
+		order: integer('order'),
 	},
 	(table) => [
 		foreignKey({ columns: [table.lobbyCode], foreignColumns: [Lobby.code] }).onDelete('cascade'),
