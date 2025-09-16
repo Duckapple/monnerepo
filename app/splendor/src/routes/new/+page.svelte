@@ -51,7 +51,7 @@
 	});
 
 	$effect(() => {
-		if ($room.data?.data.started) {
+		if ($room.data?.data?.game) {
 			window.location.href = `/game?id=${searchId}`;
 		}
 	});
@@ -66,15 +66,15 @@
 
 <Background card={cardFromId(143)} />
 
-<div class="z-30 flex flex-col items-center justify-center w-full h-screen">
-	<div class="flex flex-col p-2 m-2 rounded-md shadow-sm md:p-4 bg-slate-50">
+<div class="z-30 flex h-screen w-full flex-col items-center justify-center">
+	<div class="m-2 flex flex-col rounded-md bg-slate-50 p-2 shadow-sm md:p-4">
 		{#if !$isLoggedIn}
 			<Login onSuccess={() => {}} />
 		{/if}
 		{#if $room.data?.error}
 			{@const err = $room.data.error.value}
 			{#if 'data' in err && err.data === 'NOT_IN_ROOM'}
-				<span class="text-2xl mb-2">You are not in this room!</span>
+				<span class="mb-2 text-2xl">You are not in this room!</span>
 				<Button loading={$joinRoom.isPending} onClick={() => $joinRoom.mutate()}>
 					Join the room
 				</Button>
@@ -82,26 +82,26 @@
 			{:else}
 				<span class="text-red-700">{err?.message}</span>
 			{/if}
-		{:else if $room.isSuccess && $room.data.data != null}
-			{@const data = $room.data.data}
-			{@const ownerName = data.players.find(({ userId }) => data?.ownerId === userId)?.userName}
+		{:else if $room.isSuccess && $room.data.data?.lobby != null}
+			{@const data = $room.data.data.lobby}
+			{@const ownerName = data.players.find(({ owner }) => owner)?.userName}
 			<div class="max-w-md p-2">
-				<h1 class="pb-4 pr-20 text-5xl">New game</h1>
-				<p class="text-sm text-right">
-					Opened {timeAgo(data.createdAt)}
+				<h1 class="pr-20 pb-4 text-5xl">New game</h1>
+				<p class="text-right text-sm">
+					Opened {timeAgo(data.lobby.createdAt)}
 					<br />
 					by {ownerName}
 				</p>
 				Players:
-				<ul class="pl-6 list-disc">
+				<ul class="list-disc pl-6">
 					{#each data.players as player}
 						<li>
 							{player.userName}
-							{#if player.userId === data.ownerId}👑{/if}
+							{#if player.owner}👑{/if}
 						</li>
 					{/each}
 				</ul>
-				{#if data.ownerId === $user?.id && data.players.length > 1}
+				{#if data.players.some(({ owner }) => owner)}
 					<Button
 						onClick={() => $startGame.mutate()}
 						loading={$startGame.isPending}
