@@ -10,6 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter({
 			fallback: '404.html',
+			envPrefix: 'SPLENDOR_',
 		}),
 		alias: {
 			$backend: 'src/backend',
