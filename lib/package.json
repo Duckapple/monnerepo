@@ -35,7 +35,8 @@
 		"./hooks": "./src/lib/hooks/_.ts",
 		"./db": "./src/lib/db/_.ts",
 		"./utils": "./src/lib/utils/_.ts",
-		"./global.css": "./global.css"
+		"./global.css": "./global.css",
+		"./global.d.ts": "./global.d.ts"
 	},
 	"peerDependencies": {
 		"svelte": "catalog:"
@@ -51,6 +52,7 @@
 		"@tailwindcss/vite": "catalog:",
 		"@testing-library/jest-dom": "catalog:",
 		"@testing-library/svelte": "catalog:",
+		"@total-typescript/ts-reset": "catalog:",
 		"@types/pg": "catalog:",
 		"drizzle-kit": "catalog:",
 		"drizzle-orm": "catalog:",

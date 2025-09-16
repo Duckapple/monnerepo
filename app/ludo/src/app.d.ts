@@ -10,4 +10,6 @@ declare global {
 	}
 }
 
+import '@sgk/lib/global.d.ts';
+
 export {};
