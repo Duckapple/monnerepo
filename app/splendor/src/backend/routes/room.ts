@@ -181,7 +181,7 @@ async function getLobby({ userId, id }: { userId?: string; id?: string }) {
 		.leftJoin(LobbyParticipant, eq(LobbyParticipant.lobbyCode, Lobby.code))
 		.leftJoin(User, eq(User.id, LobbyParticipant.userId));
 
-	const conditions = [];
+	const conditions = [eq(Lobby.gameType, 'splendor')];
 
 	if (userId != null) {
 		query = query.leftJoin(partAgain, eq(partAgain.lobbyCode, Lobby.code));
