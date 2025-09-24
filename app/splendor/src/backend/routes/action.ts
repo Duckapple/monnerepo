@@ -1,12 +1,7 @@
 import type { AuthUser } from '$common/communication';
 import { FunctionError } from '../common/auth';
 import { and, eq, gt, not } from 'drizzle-orm';
-import {
-	SplendorAction,
-	SplendorGame,
-	SplendorGamePlayer,
-	SplendorRoom
-} from '../../lib/db/schema';
+import { SplendorAction, SplendorGame, SplendorGamePlayer } from '../../lib/db/schema';
 import { Push } from '@sgk/lib/db';
 import { db } from '../common/db';
 import { actionSchema } from '$common/schema/actions';
@@ -20,8 +15,8 @@ import { websocketCache } from '$backend/wss';
 get.params = {
 	params: t.Object({ id: t.String() }),
 	query: t.Object({
-		since: t.Optional(t.Date())
-	})
+		since: t.Optional(t.Date()),
+	}),
 };
 export async function get(user: AuthUser, req: Infer<typeof get.params>) {
 	const { since } = req.query;
@@ -53,7 +48,7 @@ export async function get(user: AuthUser, req: Infer<typeof get.params>) {
 
 post.params = {
 	body: actionSchema,
-	params: t.Object({ id: t.String() })
+	params: t.Object({ id: t.String() }),
 };
 export async function post(user: AuthUser, req: Infer<typeof post.params>) {
 	const { id: gameId } = req.params;
@@ -105,17 +100,17 @@ export async function post(user: AuthUser, req: Infer<typeof post.params>) {
 			.update(SplendorGamePlayer)
 			.set(res.value.player)
 			.where(and(eq(SplendorGamePlayer.userId, user.id), eq(SplendorGamePlayer.gameId, gameId))),
-		db.insert(SplendorAction).values(dbAction)
+		db.insert(SplendorAction).values(dbAction),
 	]);
 
 	const data = {
 		game: {
 			...dbRes.game,
 			...res.value.game,
-			piles: mergeKeyLengths(res.value.game.piles, dbRes.game.piles)
+			piles: mergeKeyLengths(res.value.game.piles, dbRes.game.piles),
 		} as GameState,
 		player: { ...dbRes.player, ...res.value.player } as SplendorGamePlayer,
-		action: dbAction as Action
+		action: dbAction as Action,
 	};
 
 	otherPlayers.forEach(({ userId }) => {
@@ -127,9 +122,6 @@ export async function post(user: AuthUser, req: Infer<typeof post.params>) {
 			if (Push) return push(Push, { message: "It's your turn!", type: 'your-turn', gameId, data });
 		})
 	);
-
-	if (data.game.phase === GamePhase.FINISHED)
-		await db.update(SplendorRoom).set({ ended: true }).where(eq(SplendorRoom.id, gameId));
 
 	return data;
 }

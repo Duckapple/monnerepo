@@ -47,9 +47,7 @@
 		<p {title}>
 			Created by
 			<span class="text-slate-900">
-				{details.players.find((p) =>
-					'owner' in p ? p.owner : 'ownerId' in details && details.ownerId === p.userId
-				)?.userName}
+				{details.players.find((p) => p.owner)?.userName}
 			</span>
 			{timeAgo(createdAt)}
 		</p>

@@ -1,38 +1,60 @@
 import { and, eq } from 'drizzle-orm';
-import { SplendorGame, SplendorGamePlayer, SplendorRoom as Room } from '../../lib/db/schema';
+import { SplendorGame, SplendorGamePlayer } from '../../lib/db/schema';
 import { db } from '../common/db';
 import { FunctionError } from '../common/auth';
 import type { AuthUser, GameAndPlayers } from '$common/communication';
 import { newGameState } from '$common/defaults';
 import { mapValues } from '$common/utils';
 import { websocketCache } from '$backend/wss';
-import { User } from '@sgk/lib/db';
+import { Lobby, LobbyParticipant, User } from '@sgk/lib/db';
+import { alias } from 'drizzle-orm/pg-core';
 
-export async function post(user: AuthUser, id: string) {
-	if (typeof id !== 'string') throw new FunctionError(400, { message: 'Bad room ID' });
+const participantAgain = alias(LobbyParticipant, 'part2');
+
+export async function post(user: AuthUser, code: string) {
+	if (typeof code !== 'string') throw new FunctionError(400, { message: 'Bad room ID' });
 
 	const roomPlayers = await db
 		.select()
-		.from(Room)
-		.leftJoin(SplendorGamePlayer, eq(Room.id, SplendorGamePlayer.gameId))
-		.where(and(eq(Room.id, id), eq(Room.ownerId, user.id), eq(Room.started, false)));
+		.from(Lobby)
+		.leftJoin(LobbyParticipant, eq(Lobby.code, LobbyParticipant.lobbyCode))
+		.innerJoin(
+			participantAgain,
+			and(eq(Lobby.code, participantAgain.lobbyCode), eq(participantAgain.userId, user.id))
+		)
+		.where(
+			and(
+				eq(Lobby.code, code),
+				eq(Lobby.gameType, 'splendor'),
+				eq(participantAgain.owner, true),
+				eq(participantAgain.userId, user.id)
+			)
+		);
 
 	if (roomPlayers == null) throw new FunctionError(400, { message: 'Bad Request' });
 
 	if (roomPlayers.length < 2)
 		throw new FunctionError(400, { message: 'Cannot start game with only 1 player' });
 
-	const game = newGameState(id, roomPlayers.length as 2 | 3 | 4);
+	const newId = crypto.randomUUID();
+	const game = newGameState(newId, roomPlayers.length as 2 | 3 | 4);
+	const players = roomPlayers.map(({ LobbyParticipant }) => LobbyParticipant).filter(Boolean);
 
 	await Promise.all([
 		db.insert(SplendorGame).values(game),
-		db.update(Room).set({ started: true }).where(eq(Room.id, id))
+		db.insert(SplendorGamePlayer).values(
+			players.map((p) => ({
+				gameId: newId,
+				userId: p.userId,
+				position: (p.order ?? 0) as SplendorGamePlayer['position'],
+			}))
+		),
+		db.delete(Lobby).where(eq(Lobby.code, code)),
+		db.delete(LobbyParticipant).where(eq(LobbyParticipant.lobbyCode, code)),
 	]);
 
-	for (const { SplendorGamePlayer } of roomPlayers.filter(
-		({ SplendorGamePlayer }) => SplendorGamePlayer?.userId !== user.id
-	)) {
-		websocketCache[SplendorGamePlayer!.userId]?.({ type: 'game-started', id });
+	for (const participant of players.filter((participant) => participant?.userId !== user.id)) {
+		websocketCache[participant.userId]?.({ type: 'game-started', id: code });
 	}
 
 	return game;
@@ -61,8 +83,8 @@ export async function get(user: AuthUser, id: string) {
 		piles,
 		players: result.map(({ player, userName }) => ({
 			...player,
-			userName
-		}))
+			userName,
+		})),
 	};
 
 	return game;

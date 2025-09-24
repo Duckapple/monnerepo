@@ -54,13 +54,13 @@ export type Extends<T1, T2> = T1 extends T2 ? true : false;
 
 const dict = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
-export function encodeBase58(n: number, minWidth = 8) {
+export function encodeBase58(n: number, minWidth = 6) {
 	let res = '';
 	while (n > 0) {
 		res = dict[n % 58] + res;
 		n = Math.floor(n / 58);
 	}
-	while (res.length <= minWidth) {
+	while (res.length < minWidth) {
 		res = '1' + res;
 	}
 	return res;

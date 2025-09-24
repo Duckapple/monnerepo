@@ -57,46 +57,49 @@ export const room = new Elysia({ prefix: '/room' })
 		return { game: data, lobby: null };
 	})
 	.post('/', async ({ user }) => {
-		const code = encodeBase58(randomInt(58 ** 6));
+		const code = encodeBase58(randomInt(58 ** 6), 6);
 		const inserts = [
 			db.insert(Lobby).values({ code, gameType: 'splendor' }),
-			db.insert(LobbyParticipant).values({ lobbyCode: code, userId: user.id, owner: true }),
+			db
+				.insert(LobbyParticipant)
+				.values({ lobbyCode: code, userId: user.id, owner: true, order: 0 }),
 		];
-		const players = [{ userId: user.id, position: 0, userName: user.userName }];
+		const players = [{ userId: user.id, order: 0, owner: true, userName: user.userName }];
 		await Promise.all(inserts);
 		return { code, players };
 	})
 	.put('/:id', async ({ user, params: { id }, error }) => {
-		const roomAndPlayers = await getGame(eq(SplendorGame.id, id));
+		const roomAndPlayers = await getLobby({ id });
 
 		if (roomAndPlayers.length === 0) {
 			return error(404, { message: 'Not Found' });
 		}
 
-		const [data] = roomAndPlayers;
+		const [lobby] = roomAndPlayers;
 
-		const players = data.players;
+		const players = roomAndPlayers.map(({ participant }) => participant);
 
 		let message = "You're already in the room!";
 
 		if (players.length < 4 && players.every((player) => player.userId !== user.id)) {
 			const length = players.length as 0 | 1 | 2 | 3;
 			const newPlayer = {
-				gameId: id,
+				lobbyCode: id,
 				userId: user.id,
-				position: length,
-				cards: [],
+				order: length,
 			};
-			await db.insert(SplendorGamePlayer).values(newPlayer);
+			await db.insert(LobbyParticipant).values(newPlayer);
 			players.push({
 				userId: user.id,
-				position: length,
+				order: length,
 				userName: user.userName,
+				owner: false,
+				joinedAt: new Date(),
 			});
 			message = 'Joined the room!';
 		}
 
-		return { message, ...data };
+		return { message, lobby: { lobby: lobby.Lobby, players } };
 	});
 
 export async function getGame(where: ReturnType<typeof eq>, inRoom?: true) {
@@ -106,6 +109,7 @@ export async function getGame(where: ReturnType<typeof eq>, inRoom?: true) {
 			player: {
 				userId: SplendorGamePlayer.userId,
 				position: SplendorGamePlayer.position,
+				owner: SplendorGamePlayer.owner,
 				userName: User.userName,
 			},
 		})
@@ -166,7 +170,7 @@ async function oneLobby({ userId, id }: { userId: string; id: string }) {
 	});
 }
 
-async function getLobby({ userId, id }: { userId?: string; id?: string }) {
+export async function getLobby({ userId, id }: { userId?: string; id?: string }) {
 	let query = db
 		.select({
 			Lobby,
@@ -175,6 +179,7 @@ async function getLobby({ userId, id }: { userId?: string; id?: string }) {
 				userName: User.userName,
 				joinedAt: LobbyParticipant.joinedAt,
 				owner: LobbyParticipant.owner,
+				order: LobbyParticipant.order,
 			},
 		})
 		.from(Lobby)

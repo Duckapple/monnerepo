@@ -101,7 +101,7 @@
 						</li>
 					{/each}
 				</ul>
-				{#if data.players.some(({ owner }) => owner)}
+				{#if data.players.some(({ owner, userId }) => userId === $user?.id && owner)}
 					<Button
 						onClick={() => $startGame.mutate()}
 						loading={$startGame.isPending}

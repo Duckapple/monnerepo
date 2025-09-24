@@ -3,33 +3,28 @@ import type { AuthUser } from '$common/communication';
 import type { Infer } from '../common/type';
 import { RedirectError } from '../common/error';
 import { db } from '../common/db';
-import { SplendorGamePlayer, SplendorRoom } from '../../lib/db/schema';
-import { getGame } from '$backend/routes/room';
-import { eq } from 'drizzle-orm';
+import { getLobby } from '$backend/routes/room';
+import { LobbyParticipant } from '@sgk/lib/db';
 
 get.params = { query: t.Object({ id: t.String() }) };
 export async function get(user: AuthUser, { query: { id } }: Infer<typeof get.params>) {
-	const roomAndPlayers = await getGame(eq(SplendorRoom.id, id));
+	const roomAndPlayers = await getLobby({ id });
 
-	const [data] = roomAndPlayers;
+	const lobby = roomAndPlayers[0]?.Lobby;
+	const players = roomAndPlayers.map(({ participant }) => participant);
 
-	if (!data) {
+	if (!lobby) {
 		throw new RedirectError(303, `/new?id=${id}`);
 	}
-
-	const players = data.players;
 
 	if (players.length < 4 && players.every((player) => player.userId !== user.id)) {
 		const length = players.length as 0 | 1 | 2 | 3;
 
-		const newPlayer = {
-			gameId: id,
+		await db.insert(LobbyParticipant).values({
+			lobbyCode: id,
 			userId: user.id,
-			position: length,
-			cards: []
-		};
-
-		await db.insert(SplendorGamePlayer).values(newPlayer);
+			order: length,
+		});
 	}
 
 	throw new RedirectError(303, `/new?id=${id}`);
