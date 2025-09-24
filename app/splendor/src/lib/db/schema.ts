@@ -21,6 +21,7 @@ export const SplendorGamePlayer = pgTable("SplendorGamePlayer", {
 	reserved: json("reserved").notNull().default(sql`('[]')`).$type<number[]>(),
   cards: json("cards").notNull().default(sql`('[]')`).$type<number[]>(),
   tokens: json("tokens").notNull().default(sql`('[0,0,0,0,0,0]')`).$type<TokenHold>(),
+	owner: boolean("owner").notNull().default(false),
 });
 export type SplendorGamePlayer = typeof SplendorGamePlayer.$inferSelect;
 

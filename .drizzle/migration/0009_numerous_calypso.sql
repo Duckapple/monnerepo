@@ -1,0 +1,1 @@
+ALTER TABLE "SplendorGamePlayer" ADD COLUMN "owner" boolean DEFAULT false NOT NULL;
