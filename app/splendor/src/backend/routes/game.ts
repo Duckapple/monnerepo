@@ -47,6 +47,7 @@ export async function post(user: AuthUser, code: string) {
 				gameId: newId,
 				userId: p.userId,
 				position: (p.order ?? 0) as SplendorGamePlayer['position'],
+				owner: p.owner,
 			}))
 		),
 		db.delete(Lobby).where(eq(Lobby.code, code)),
