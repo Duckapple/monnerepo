@@ -17,7 +17,7 @@
 	const theta = $derived(isNaN(Math.atan(d.x / d.y)) ? 0 : Math.atan(d.x / d.y));
 	const twoH = $derived(Math.sqrt(d.x * d.x + d.y * d.y));
 	const a = $derived(clamp(0, bounds.right * 2)(twoH / 2 / Math.cos(Math.PI / 2 - theta)));
-	const b = $derived(clamp(0, bounds.bottom * 2)(twoH / 2 / Math.cos(theta)));
+	const b = $derived(clamp(0, bounds.height)(twoH / 2 / Math.cos(theta)));
 
 	function clamp(min: number, max: number) {
 		return (x: number) => (isNaN(x) ? min : Math.min(max, Math.max(min, x)));
@@ -42,7 +42,12 @@
 {/snippet}
 
 <div class="bg-blue-100 p-8">
-	<div class="relative h-96 w-64">
+	<div class="relative ml-64 h-96 w-64">
+		<img
+			src="/pot-of-greed.webp"
+			alt="Pot of Greed, spell card. Draw 2 cards."
+			class="absolute inset-0 h-96 w-64 rounded-md"
+		/>
 		<div
 			class="absolute top-0 bottom-0 left-0 w-32 bg-red-500"
 			style="clip-path: polygon(100% 100%, 0 100%, 0 0, {bounds.width - a}px 0, 100% {b}px)"
@@ -53,15 +58,16 @@
 			style="clip-path: polygon(100% 100%, 0 100%, 0 {b}px, {a}px 0, 100% 0)"
 		></div>
 		<div
-			class="absolute top-0 right-0 bottom-0 w-32 bg-green-500"
+			class="absolute top-0 -right-32 bottom-0 w-64 bg-green-500"
 			style="clip-path: polygon(0 {b}px, {a}px 0, {d.x}px {d.y}px);"
 		></div>
 		<div
-			class="absolute top-0 bottom-0 left-0 w-32 bg-green-500"
-			style="clip-path: polygon(100% {b}px, {bounds.width - a}px 0, {bounds.width -
+			class="absolute top-0 bottom-0 -left-32 w-64 bg-green-500"
+			style="clip-path: polygon(100% {b}px, {bounds.width * 2 - a}px 0, {bounds.width * 2 -
 				d.x}px {d.y}px);"
 		></div>
 		{@render dot(128 + d.x, d.y)}
+		{@render dot(128 - d.x, d.y)}
 		{@render dot(128 - a, 0)}
 		{@render dot(128 + a, 0)}
 		{@render dot(128, b)}

@@ -41,7 +41,11 @@ export const wsIdToUserId: Record<WsID, UserID> = {};
 
 export const app = new Elysia()
 	.get('/ping', 'Pong!')
-	.use(cors({ origin: ['splendor.simon-green.dev', 'api-splendor.simon-green.dev'] }))
+	.use(
+		cors({
+			origin: ['splendor.simon-green.dev', process.env.PUBLIC_SPLENDOR_WS_ORIGIN].filter(Boolean),
+		})
+	)
 	.use(Auth)
 	.ws('/ws', {
 		body: messageSchema,

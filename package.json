@@ -5,9 +5,10 @@
 	"scripts": {
 		"apps": "bun --env-file=.env --bun --filter './app/*'",
 		"all": "bun --bun --filter '*'",
+		"deploy": "cd .devops && bun --env-file=../.env deploy.ts",
 		"lint": "prettier --check . && eslint .",
 		"db:generate": "bun run ./.drizzle/scripts/gen.ts && bun drizzle-kit generate",
-		"db:migrate-prod": "bun drizzle-kit migrate"
+		"kit": "drizzle-kit"
 	},
 	"workspaces": {
 		"packages": [
