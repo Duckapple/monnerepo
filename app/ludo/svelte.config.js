@@ -1,24 +1,13 @@
-import { mdsvex } from 'mdsvex';
-import adapter from 'svelte-adapter-bun';
+// @ts-check
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { compilerOptions, kit } from '../../lib/svelte.config.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: [vitePreprocess(), mdsvex()],
-	kit: {
-		adapter: adapter(),
-		env: { dir: '../..' },
-		experimental: {
-			remoteFunctions: true
-		}
-	},
+	preprocess: [vitePreprocess()],
+	kit: kit('LUDO'),
 	extensions: ['.svelte', '.svx'],
-	compilerOptions: {
-		experimental: {
-			async: true
-		},
-		runes: true
-	}
+	compilerOptions: compilerOptions,
 };
 
 export default config;

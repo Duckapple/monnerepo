@@ -1,36 +1,5 @@
-import { svelteTesting } from '@testing-library/svelte/vite';
-import { sveltekit } from '@sveltejs/kit/vite';
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
-import tailwindcss from '@tailwindcss/vite';
+import { createConfig } from '../../lib/vite.config.ts';
 
-export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
-	server: {
-		port: 5173
-	},
-	test: {
-		workspace: [
-			{
-				extends: './vite.config.ts',
-				plugins: [svelteTesting()],
-				test: {
-					name: 'client',
-					environment: 'jsdom',
-					clearMocks: true,
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**'],
-					setupFiles: ['./vitest-setup-client.ts']
-				}
-			},
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
-			}
-		]
-	}
-});
+export default defineConfig({ ...createConfig(import.meta.env.LUDO_PORT) });

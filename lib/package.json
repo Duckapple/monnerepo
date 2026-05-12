@@ -18,7 +18,8 @@
 		"dist",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*",
-		"global.css"
+		"global.css",
+		"global.d.ts"
 	],
 	"sideEffects": [
 		"**/*.css"
