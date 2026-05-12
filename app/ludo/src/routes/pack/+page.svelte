@@ -1,6 +1,4 @@
 <script lang="ts">
-	let { data } = $props();
-
 	let rightFlap = $state<HTMLDivElement>();
 	const bounds = $derived(
 		rightFlap?.getBoundingClientRect() ?? {
@@ -12,7 +10,6 @@
 			height: 0,
 		}
 	);
-	let body = $state<HTMLBodyElement>();
 	let d = $state({ x: 50, y: 50 });
 	const theta = $derived(isNaN(Math.atan(d.x / d.y)) ? 0 : Math.atan(d.x / d.y));
 	const twoH = $derived(Math.sqrt(d.x * d.x + d.y * d.y));
@@ -26,7 +23,6 @@
 	const clampHigh = $derived(clamp(bounds.top, bounds.bottom * 2));
 </script>
 
-<svelte:body bind:this={body} />
 <svelte:window
 	onpointermove={(event) => {
 		d.x = clampWide(event.clientX) - bounds.left;
