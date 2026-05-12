@@ -1,0 +1,61 @@
+{
+	"name": "@sgk/auth",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write .",
+		"lint": "prettier --check . && eslint .",
+		"test:unit": "vitest",
+		"test": "bun --bun run test:unit -- --run"
+	},
+	"type": "module",
+	"dependencies": {
+		"@sgk/lib": "workspace:*"
+	},
+	"peerDependencies": {
+		"svelte": "catalog:"
+	},
+	"devDependencies": {
+		"@eslint/compat": "catalog:",
+		"@eslint/js": "catalog:",
+		"@sveltejs/adapter-auto": "catalog:",
+		"@sveltejs/kit": "catalog:",
+		"@sveltejs/package": "catalog:",
+		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@tailwindcss/typography": "catalog:",
+		"@tailwindcss/vite": "catalog:",
+		"@testing-library/jest-dom": "catalog:",
+		"@testing-library/svelte": "catalog:",
+		"@types/lodash.debounce": "catalog:",
+		"@types/pg": "catalog:",
+		"drizzle-kit": "catalog:",
+		"drizzle-orm": "catalog:",
+		"eslint": "catalog:",
+		"eslint-config-prettier": "catalog:",
+		"eslint-plugin-svelte": "catalog:",
+		"globals": "catalog:",
+		"jsdom": "catalog:",
+		"kysely": "catalog:",
+		"lodash.debounce": "catalog:",
+		"mdsvex": "catalog:",
+		"pg": "catalog:",
+		"prettier": "catalog:",
+		"prettier-plugin-svelte": "catalog:",
+		"prettier-plugin-tailwindcss": "catalog:",
+		"publint": "catalog:",
+		"svelte": "catalog:",
+		"svelte-adapter-bun": "catalog:",
+		"svelte-check": "catalog:",
+		"tailwindcss": "catalog:",
+		"typescript": "catalog:",
+		"typescript-eslint": "catalog:",
+		"valibot": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	}
+}
