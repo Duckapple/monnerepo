@@ -43,7 +43,7 @@ export const app = new Elysia()
 	.get('/ping', 'Pong!')
 	.use(
 		cors({
-			origin: ['splendor.simon-green.dev', process.env.PUBLIC_SPLENDOR_WS_ORIGIN].filter(Boolean),
+			origin: ['splendor.simon-green.dev', process.env.SPLENDOR_WS_ORIGIN].filter(Boolean),
 		})
 	)
 	.use(Auth)

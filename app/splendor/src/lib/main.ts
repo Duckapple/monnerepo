@@ -1,11 +1,10 @@
 import { writable, derived, get, type Writable } from 'svelte/store';
 import { treaty } from '@elysiajs/eden';
 import type { App } from '$backend/local';
-
-console.log(import.meta.env.BASE_URL);
+import { SPLENDOR_PORT } from '$env/static/public';
 
 export const BASE_URL = import.meta.env.DEV
-	? 'http://localhost:5175'
+	? `http://localhost:${SPLENDOR_PORT}`
 	: 'https://splendor.simon-green.dev';
 
 export function getClient(fetcher: typeof globalThis.fetch) {
@@ -13,7 +12,7 @@ export function getClient(fetcher: typeof globalThis.fetch) {
 		fetcher,
 		headers() {
 			return { Authorization: `Bearer ${get(jwt)}` };
-		}
+		},
 	});
 }
 
@@ -21,7 +20,7 @@ export const client = getClient(fetch);
 
 const BASE_HEADERS = {
 	Accept: 'application/json',
-	'Content-Type': 'application/json'
+	'Content-Type': 'application/json',
 };
 
 export function cachedWritable<T>(key: string): Writable<T | null>;
@@ -59,7 +58,7 @@ export async function loginRegister(input: LoginInput, isRegister = false) {
 	const data = await fetch(BASE_URL + endpoint, {
 		headers: BASE_HEADERS,
 		body: JSON.stringify(input),
-		method: 'POST'
+		method: 'POST',
 	});
 
 	if (data.status !== 200) {

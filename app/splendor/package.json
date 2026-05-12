@@ -37,7 +37,7 @@
 		"vite": "6.3.5"
 	},
 	"name": "splendor",
-	"version": "0.9.0",
+	"version": "1.0.0",
 	"type": "module",
 	"dependencies": {
 		"@elysiajs/cors": "1.2.0",

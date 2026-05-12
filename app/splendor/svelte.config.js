@@ -9,7 +9,6 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			fallback: '404.html',
 			envPrefix: 'SPLENDOR_',
 		}),
 		alias: {
@@ -19,6 +18,9 @@ const config = {
 		},
 		files: {
 			serviceWorker: 'src/service-worker',
+		},
+		env: {
+			publicPrefix: 'SPLENDOR_',
 		},
 	},
 };

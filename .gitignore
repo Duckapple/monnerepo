@@ -46,3 +46,5 @@ vite.config.ts.timestamp-*
 # Generated files
 .drizzle/scripts/app-schemas.ts
 .devops/tunnel.yaml
+.devops/services/*
+!.devops/services/service.in.service

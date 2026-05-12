@@ -1,12 +1,12 @@
 [Unit]
-Description=splendor-frontend
+Description=<NAME>
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 TimeoutStartSec=3
 Type=simple
-ExecStart=/home/pi/.bun/bin/bun --bun --watch --env-file=/home/pi/splendor/frontend/.env /home/pi/splendor/frontend/index.js
+ExecStart=/home/pi/.bun/bin/bun --bun --watch --env-file=/home/pi/deployment/.env /home/pi/deployment/<NAME>/index.js
 Restart=on-failure
 RestartSec=5s
 
