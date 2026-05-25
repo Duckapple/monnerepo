@@ -1,3 +1,4 @@
+import * as Bun from 'bun';
 import { betterAuth } from 'better-auth';
 import { username } from 'better-auth/plugins';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
@@ -30,11 +31,19 @@ export const auth = betterAuth({
 			schema: { user: { modelName: 'User', fields: { username: 'userName' } } },
 			maxUsernameLength: 64,
 		}),
+		// Other plugins go above...
 		sveltekitCookies(getRequestEvent),
 	],
 	baseURL: import.meta.env.DEV ? `http://localhost:${AUTH_PORT}` : AUTH_ORIGIN,
 	logger: {
 		level: 'debug',
 		log: console.log,
+	},
+	emailAndPassword: {
+		enabled: true,
+		password: {
+			hash: (password: string) => Bun.password.hash(password, { algorithm: 'bcrypt', cost: 12 }),
+			verify: async ({ password, hash }) => Bun.password.verifySync(password, hash),
+		},
 	},
 });

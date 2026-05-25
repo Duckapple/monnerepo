@@ -39,7 +39,7 @@ ALTER TABLE "User"
 ADD COLUMN "email" varchar(255);
 --> statement-breakpoint
 UPDATE "User"
-SET "email" = "id" || '@auth.simon-green.dev'
+SET "email" = "userName" || '@auth.simon-green.dev'
 WHERE "email" IS NULL;
 --> statement-breakpoint
 ALTER TABLE "User"
@@ -61,6 +61,9 @@ ADD COLUMN "updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL;
 ALTER TABLE "User"
 ADD COLUMN "display_username" varchar(64);
 --> statement-breakpoint
+ALTER TABLE "User"
+ALTER COLUMN "bcrypt" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "Account"
 ADD CONSTRAINT "Account_user_id_User_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."User"("id") ON DELETE cascade ON UPDATE no action;
 --> statement-breakpoint
@@ -69,3 +72,20 @@ ADD CONSTRAINT "Session_user_id_User_id_fk" FOREIGN KEY ("user_id") REFERENCES "
 --> statement-breakpoint
 ALTER TABLE "User"
 ADD CONSTRAINT "User_email_unique" UNIQUE("email");
+--> statement-breakpoint
+INSERT INTO "Account" (
+		provider_id,
+		user_id,
+		account_id,
+		password,
+		created_at,
+		updated_at
+	)
+SELECT 'credential',
+	s.id,
+	s.id,
+	s.bcrypt,
+	now(),
+	now()
+FROM "User" s
+WHERE s.bcrypt IS NOT NULL;

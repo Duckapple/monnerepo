@@ -23,7 +23,7 @@ export const Account = d.pgTable('Account', {
 		.notNull()
 		.references(() => User.id, { onDelete: 'cascade' }),
 	accountId: d.text('account_id').notNull(),
-	providerId: d.text('provider_id').notNull().$type<'discord' | 'meme-api'>(),
+	providerId: d.text('provider_id').notNull().$type<'credential' | 'discord' | 'meme-api'>(),
 	accessToken: d.text('access_token'),
 	refreshToken: d.text('refresh_token'),
 	accessTokenExpiresAt: d.timestamp('access_token_expires_at', {
