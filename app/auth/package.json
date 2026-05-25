@@ -33,6 +33,7 @@
 		"@testing-library/svelte": "catalog:",
 		"@types/lodash.debounce": "catalog:",
 		"@types/pg": "catalog:",
+		"better-auth": "catalog:",
 		"drizzle-kit": "catalog:",
 		"drizzle-orm": "catalog:",
 		"eslint": "catalog:",

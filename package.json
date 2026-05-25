@@ -31,6 +31,7 @@
 			"@types/bun": "latest",
 			"@types/lodash.debounce": "^4.0.9",
 			"@types/pg": "^8.15.5",
+			"better-auth": "^1.6.11",
 			"drizzle-kit": "^0.31.4",
 			"drizzle-orm": "^0.44.5",
 			"eslint-config-prettier": "^10.0.1",

@@ -1,4 +1,8 @@
-const glob = new Bun.Glob('./app/*/src/lib/db/schema.ts');
+import * as Bun from 'bun';
 
 const file = Bun.file('./.drizzle/scripts/app-schemas.ts');
-file.write([...glob.scanSync()].map((path) => `export * from '../.${path}';`).join('\n'));
+file.write(
+	[...new Bun.Glob('./app/*/src/lib/db/schema.ts').scanSync()]
+		.map((path) => `export * from '../.${path}';`)
+		.join('\n')
+);
