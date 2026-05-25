@@ -1,9 +1,9 @@
-import { createDb, User } from '@sgk/lib/db';
+import { createDb, drizzle, User } from '@sgk/lib/db';
 import type { Kyselify } from 'drizzle-orm/kysely';
-import {} from './schema.ts';
+import * as schema from './schema.ts';
 
-interface Database {
-	User: Kyselify<typeof User>;
-}
+// interface Database {
+// 	User: Kyselify<typeof User>;
+// }
 
-export const db = createDb<Database>();
+export const db = drizzle(schema);

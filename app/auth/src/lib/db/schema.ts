@@ -41,7 +41,7 @@ export const Account = d.pgTable('Account', {
 	updatedAt: d.timestamp('updated_at', { precision: 6, withTimezone: true }).notNull(),
 });
 
-export const verification = d.pgTable('Verification', {
+export const Verification = d.pgTable('Verification', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	identifier: d.text('identifier').notNull(),
 	value: d.text('value').notNull(),
