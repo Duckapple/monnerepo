@@ -3,8 +3,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"apps": "bun --env-file=.env --bun --filter './app/*'",
-		"all": "bun --bun --filter '*'",
+		"apps": "bun --env-file=.env --filter './app/*'",
+		"all": "bun --env-file=.env --filter '*'",
 		"deploy": "cd .devops && bun --env-file=../.env deploy.ts",
 		"lint": "prettier --check . && eslint .",
 		"db:generate": "bun run ./.drizzle/scripts/gen.ts && bun drizzle-kit generate",
