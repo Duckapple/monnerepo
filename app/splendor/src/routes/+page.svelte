@@ -53,7 +53,7 @@
 		</p>
 		Players:
 		<ul class="list-disc pl-6">
-			{#each details.players as player}
+			{#each details.players as player (player.userId)}
 				<li>{player.userName}</li>
 			{/each}
 		</ul>
@@ -70,12 +70,12 @@
 		{/if}
 		{#if $isLoggedIn && $rooms.isSuccess}
 			<div class="flex grid-cols-2 flex-col gap-4 pb-2 md:grid lg:grid-cols-3">
-				{#each $rooms.data?.data?.lobby ?? [] as lobby}
+				{#each $rooms.data?.data?.lobby ?? [] as lobby (lobby.lobby.code)}
 					{@render card(lobby)}
 				{:else}
 					<p class="py-8 text-center">No rooms found</p>
 				{/each}
-				{#each $rooms.data?.data?.game ?? [] as room}
+				{#each $rooms.data?.data?.game ?? [] as room (room.game.id)}
 					{@render card(room, room.game.phase === 2 ? 'ended' : 'started')}
 				{:else}
 					<p class="py-8 text-center">No rooms found</p>

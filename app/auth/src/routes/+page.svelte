@@ -16,6 +16,10 @@
 		statusText: string;
 	} | null>();
 
+	function onchange() {
+		formError = null;
+	}
+
 	async function login() {
 		const { error } = await authClient.signIn.username({ username, password });
 		if (error) {
@@ -63,13 +67,22 @@
 		<form class="rounded-md border border-black p-4">
 			<label>
 				<h2>Username</h2>
-				<input class="rounded-sm border border-gray-400" bind:value={username} />
+				<input class="rounded-sm border border-gray-400" {onchange} bind:value={username} />
 			</label>
 
 			<label>
 				<h2>Password</h2>
-				<input class="rounded-sm border border-gray-400" type="password" bind:value={password} />
+				<input
+					class="rounded-sm border border-gray-400"
+					{onchange}
+					bind:value={password}
+					type="password"
+				/>
 			</label>
+
+			<p class="text-red-500">
+				{formError?.message}&nbsp;
+			</p>
 
 			<div>
 				<button class="rounded-sm bg-blue-100 px-2 py-1" type="button" onclick={register}>

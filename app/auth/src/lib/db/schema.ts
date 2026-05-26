@@ -1,23 +1,8 @@
 import { User } from '@sgk/lib/db';
 import * as d from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
-
-export const Session = d.pgTable('Session', {
-	id: uuid('id').primaryKey().defaultRandom(),
-	userId: d
-		.uuid('user_id')
-		.notNull()
-		.references(() => User.id, { onDelete: 'cascade' }),
-	token: d.varchar('token', { length: 255 }).notNull().unique(),
-	expiresAt: d.timestamp('expires_at', { precision: 6, withTimezone: true }).notNull(),
-	ipAddress: d.text('ip_address'),
-	userAgent: d.text('user_agent'),
-	createdAt: d.timestamp('created_at', { precision: 6, withTimezone: true }).notNull(),
-	updatedAt: d.timestamp('updated_at', { precision: 6, withTimezone: true }).notNull(),
-});
 
 export const Account = d.pgTable('Account', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: d.uuid('id').primaryKey().defaultRandom(),
 	userId: d
 		.uuid('user_id')
 		.notNull()
@@ -42,7 +27,7 @@ export const Account = d.pgTable('Account', {
 });
 
 export const Verification = d.pgTable('Verification', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: d.uuid('id').primaryKey().defaultRandom(),
 	identifier: d.text('identifier').notNull(),
 	value: d.text('value').notNull(),
 	expiresAt: d.timestamp('expires_at', { precision: 6, withTimezone: true }).notNull(),

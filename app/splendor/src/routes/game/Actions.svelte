@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { cachedWritable, client, userNames } from '$lib/main';
-	import { createQuery } from '@tanstack/svelte-query';
-	import type { Action } from '$common/model';
+	import { userNames } from '$lib/main';
 	import Coin from '$lib/game/Coin.svelte';
 	import Card from '$lib/game/Card.svelte';
 	import { cardFromId } from '$common/defaults';
 	import { moveTo } from '$lib/move';
+	import { getActions } from './_queries.remote';
 
 	interface Props {
 		gameId: string;
@@ -20,29 +19,9 @@
 		target = newVal;
 	}
 
-	const actionsCache = cachedWritable<Action[]>(`actions-${gameId}`, []);
+	const actions = getActions(gameId);
 
-	const query = createQuery({
-		queryKey: ['actions', gameId],
-		async queryFn() {
-			const last = $actionsCache.at(-1);
-			const params: Record<string, string> = {};
-			if (last != null) params['since'] = last.timestamp as unknown as string;
-			const data = await client.api.action({ id: gameId }).get({ query: params });
-			if (data.error) throw data.error;
-			actionsCache.update((cache) => cache.concat(data.data));
-			return data.data;
-		},
-		initialData: $actionsCache,
-	});
-
-	// $effect(() => {
-	// 	if (orderedActions.length === 0) {
-	// 		$query.refetch();
-	// 	}
-	// });
-
-	let orderedActions = $derived([...($query.data ?? [])].reverse());
+	let orderedActions = $derived((actions.current ?? []).toReversed());
 
 	let cardClick = $derived((card: EventTarget | null) => {
 		if (!(card instanceof HTMLElement)) return;
@@ -55,28 +34,28 @@
 	});
 </script>
 
-<div class="absolute top-0 left-0 flex items-center justify-center z-10">
+<div class="absolute top-0 left-0 z-10 flex items-center justify-center">
 	<div
-		class="bg-white p-2 overflow-y-auto text-sm min-w-72 max-h-[calc(100svh-5rem)] divide-y grid grid-cols-3"
+		class="grid max-h-[calc(100svh-5rem)] min-w-72 grid-cols-3 divide-y overflow-y-auto bg-white p-2 text-sm"
 	>
-		{#if $query.error}
-			{JSON.stringify($query.error)}
+		{#if actions.error}
+			{JSON.stringify(actions.error)}
 		{/if}
-		{#each orderedActions as action}
-			<div class="grid items-center col-span-3 grid-cols-subgrid gap-x-2 min-h-16">
+		{#each orderedActions as action, i (i)}
+			<div class="col-span-3 grid min-h-16 grid-cols-subgrid items-center gap-x-2">
 				{#if action.type === 'TAKE_TOKENS'}
 					<span>{$userNames[action.userId]}</span>
 					<span class="justify-self-end">took</span>
-					<div class="flex gap-2 scale-50 justify-self-center">
-						{#each action.data.tokens as color}
+					<div class="flex scale-50 gap-2 justify-self-center">
+						{#each action.data.tokens as color, i (i)}
 							<Coin {color} small hideNumber />
 						{/each}
 					</div>
 					{#if action.data.returned}
 						<span>returning</span>
 						<span></span>
-						<div class="flex gap-2 scale-50 justify-self-center">
-							{#each action.data.returned as color}
+						<div class="flex scale-50 gap-2 justify-self-center">
+							{#each action.data.returned as color, i (i)}
 								<Coin {color} small hideNumber />
 							{/each}
 						</div>

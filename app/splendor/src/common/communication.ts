@@ -8,7 +8,12 @@ const NONE = Symbol();
 
 export type NONE = typeof NONE;
 
-export type GameAndPlayers = SplendorGame & {
+type SplendorGameIsh = Omit<SplendorGame, 'createdAt' | 'updatedAt'> & {
+	createdAt?: Date;
+	updatedAt?: Date;
+};
+
+export type GameAndPlayers = SplendorGameIsh & {
 	players: (SplendorGamePlayer & { userName: string })[];
 };
 

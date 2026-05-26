@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { jwt, user, userNames } from '$lib/main';
-	import { readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 
 	import BuyModal from '$lib/compose/BuyModal.svelte';
 	import TakeModal from '$lib/compose/TakeModal.svelte';
@@ -15,18 +13,15 @@
 	import { cardFromId } from '$common/defaults';
 	import { range } from '$common/utils';
 	import { moveTo } from '$lib/move';
-	import type { GameAndPlayers } from '$common/communication';
-	import { useUpdateGameState } from '$lib/state/update-game';
 	import Icon from '$lib/base/Icon.svelte';
 	import { GamePhase } from '$common/model';
 	import { tick } from 'svelte';
 	import Button from '$lib/base/Button.svelte';
-	import ColorblindToggle from './ColorblindToggle.svelte';
+	import ColorblindToggle from '../ColorblindToggle.svelte';
 	import { getWebSocket } from '$lib/web-socket.svelte';
-	import { gameQuery } from './_queries';
+	import { getGame, performAction } from '../_queries.remote';
 
-	const qc = useQueryClient();
-	const { updateGameState } = useUpdateGameState(qc);
+	const { data } = $props();
 
 	let cardCenter = $state({ value: undefined as unknown as HTMLDivElement });
 	let coinCenter = $state({ value: undefined as unknown as HTMLDivElement });
@@ -42,7 +37,8 @@
 				break;
 			case 'your-turn':
 				console.log('Your turn!', e.data);
-				updateGameState(e.data.gameId, { data: e.data.data, error: null, status: 200 });
+				gameQuery.set(e.data.data);
+				// updateGameState(e.data.gameId, { data: e.data.data, error: null, status: 200 });
 				break;
 		}
 	});
@@ -50,12 +46,12 @@
 	const ws = getWebSocket();
 	let subbed = $state(false);
 	$effect(() => {
-		if (jwt && ws && !subbed) {
+		if ($jwt && ws && !subbed) {
 			ws?.subscribe(({ data }) => {
 				switch (data.type) {
 					case 'game-update':
 						console.log('Your turn!', data);
-						updateGameState(data.id, { data: data.update, error: null, status: 200 });
+						gameQuery.refresh();
 						break;
 				}
 			});
@@ -87,7 +83,7 @@
 				return;
 			}
 			setter(newTarget);
-			center.value && moveTo(newTarget, center.value);
+			if (center.value) moveTo(newTarget, center.value);
 		}
 	}
 
@@ -95,45 +91,40 @@
 	const handleReserveCard = handleClick.bind({}, setCurrent, cardCenter, true);
 	const handleCoin = handleClick.bind({}, setCurrent, coinCenter, false);
 
-	const searchId = readable(new URLSearchParams(globalThis.location?.search).get('id'));
-
-	const game = $derived(createQuery(gameQuery(fetch, $searchId)));
+	const gameQuery = getGame(data.id);
 
 	$effect(() => {
-		for (const { userName, userId } of $game.data?.data?.players ?? []) {
+		for (const { userName, userId } of gameQuery.current?.players ?? []) {
 			$userNames[userId] = userName;
 		}
 	});
 
-	const gameCache = $derived($game.data?.data as GameAndPlayers | undefined);
+	const game = $derived(gameQuery.current);
 
-	const notify = createMutation({
-		mutationKey: ['notifications', $user?.id],
-		async mutationFn() {
-			let allowed = window.Notification.permission;
-			if (allowed === 'default') {
-				allowed = await window.Notification.requestPermission();
-				serviceWorker.postMessage({ type: 'notifications', jwt: $jwt });
-			}
-		},
-	});
+	const notify = async () => {
+		let allowed = window.Notification.permission;
+		if (allowed === 'default') {
+			allowed = await window.Notification.requestPermission();
+			serviceWorker.postMessage({ type: 'notifications', jwt: $jwt });
+		}
+	};
 
 	const playersWithPoints = $derived.by(() => {
-		if (gameCache?.phase === GamePhase.FINISHED) {
-			return (gameCache?.players ?? [])
+		if (game?.phase === GamePhase.FINISHED) {
+			return (game?.players ?? [])
 				.map((player) => ({
 					...player,
 					points: player.cards.reduce((acc, card) => acc + cardFromId(card).p, 0),
 				}))
 				.sort((a, b) => b.points - a.points);
 		}
-		return gameCache?.players;
+		return game?.players;
 	});
 
 	let hideOverlay = $state(false);
 	let showWinners = $state(false);
 	$effect(() => {
-		if (gameCache?.phase === GamePhase.FINISHED) {
+		if (game?.phase === GamePhase.FINISHED) {
 			tick().then(() => {
 				showWinners = true;
 			});
@@ -149,47 +140,47 @@
 	<div class="flex flex-col md:flex-row">
 		<div class="space-y-3">
 			<div class="flex justify-center gap-2 md:gap-3">
-				{#each gameCache?.shown?.persons ?? [] as cardId (cardId)}
+				{#each game?.shown?.persons ?? [] as cardId (cardId)}
 					<Person card={cardFromId(cardId)} />
 				{/each}
 				<div class="h-14 md:h-32"></div>
 			</div>
 			<div class="flex gap-2 md:gap-3">
-				<CardStack count={gameCache?.piles?.high?.length} tier="high" />
-				{#each gameCache?.shown?.high ?? [] as cardId (cardId)}
+				<CardStack count={game?.piles?.high?.length} tier="high" />
+				{#each game?.shown?.high ?? [] as cardId (cardId)}
 					<Card card={cardFromId(cardId)} onclick={handleBuyCard} onkeypress={handleBuyCard} />
 				{/each}
 			</div>
 			<div class="flex gap-2 md:gap-3">
-				<CardStack count={gameCache?.piles?.middle?.length} tier="middle" />
-				{#each gameCache?.shown?.middle ?? [] as cardId (cardId)}
+				<CardStack count={game?.piles?.middle?.length} tier="middle" />
+				{#each game?.shown?.middle ?? [] as cardId (cardId)}
 					<Card card={cardFromId(cardId)} onclick={handleBuyCard} onkeypress={handleBuyCard} />
 				{/each}
 			</div>
 			<div class="flex gap-2 md:gap-3">
-				<CardStack count={gameCache?.piles?.low?.length} tier="low" />
-				{#each gameCache?.shown?.low ?? [] as cardId (cardId)}
+				<CardStack count={game?.piles?.low?.length} tier="low" />
+				{#each game?.shown?.low ?? [] as cardId (cardId)}
 					<Card card={cardFromId(cardId)} onclick={handleBuyCard} onkeypress={handleBuyCard} />
 				{/each}
 			</div>
 		</div>
 		<div class="flex gap-3 py-6 pl-2 md:flex-col md:gap-6 md:pt-12 md:pl-4">
-			{#each gameCache?.tokens ?? [] as stackSize, color}
+			{#each game?.tokens ?? [] as stackSize, color (color)}
 				<Coin {color} {stackSize} onclick={handleCoin} onkeypress={handleCoin} />
 			{/each}
 		</div>
 	</div>
 	<div class="flex w-full flex-wrap gap-4">
-		{#each gameCache?.players ?? [] as player}
+		{#each game?.players ?? [] as player (player.userId)}
 			<Hand
 				{player}
-				turn={gameCache?.turn}
+				turn={game?.turn}
 				buyReserved={handleReserveCard}
 				targetCardId={Number(target?.dataset.cardId)}
-				phase={gameCache?.phase}
+				phase={game?.phase}
 			/>
 		{/each}
-		{#each range(4 - (gameCache?.players.length ?? 0)) as _}
+		{#each range(4 - (game?.players.length ?? 0)) as i (i)}
 			<div class=""></div>
 		{/each}
 	</div>
@@ -207,18 +198,18 @@
 			{#if $searchId != null}<Actions gameId={$searchId} />{/if}
 		</div>
 	</details> -->
-	<button onclick={() => $notify.mutate()}>
+	<button onclick={() => notify()}>
 		<Icon icon="bell" class="size-6 [stroke-width:1.5] md:size-8" />
 	</button>
 	<ColorblindToggle />
-	{#if gameCache?.phase === GamePhase.FINISHED}
+	{#if game?.phase === GamePhase.FINISHED}
 		<button onclick={() => (hideOverlay = !hideOverlay)}>
 			<Icon icon="trophy" class="size-8 [stroke-width:1.5] {hideOverlay ? 'animate-bounce' : ''}" />
 		</button>
 	{/if}
 </div>
 
-{#if gameCache?.phase === GamePhase.FINISHED && !hideOverlay}
+{#if game?.phase === GamePhase.FINISHED && !hideOverlay}
 	<div
 		transition:fade={{ duration: 500 }}
 		class="bg-opacity-75 fixed inset-0 z-10 flex items-center justify-center bg-slate-950 select-none"
@@ -226,7 +217,7 @@
 		<div class="mb-64 flex flex-col items-center gap-y-6 text-white sm:mb-0">
 			<h2 class="text-center text-4xl">Game Over</h2>
 			<div class="flex grid-cols-2 flex-col gap-x-8 gap-y-4 text-center lg:grid lg:text-left">
-				{#each playersWithPoints ?? [] as player, i}
+				{#each playersWithPoints ?? [] as player, i (player.userId)}
 					{@const delayIndex = (playersWithPoints?.length ?? 0) - i}
 					{#if showWinners}
 						<div
@@ -264,20 +255,28 @@
 <BuyModal
 	closeModal={() => setCurrent(undefined)}
 	open={target != null && !target.dataset.coinColor}
-	game={gameCache}
+	{game}
 	{target}
 	cardId={target?.dataset.cardId ? Number(target.dataset.cardId) : undefined}
-	player={gameCache?.players.find(({ userId }) => userId === $user?.id)}
+	player={game?.players.find(({ userId }) => userId === $user?.id)}
 	bind:center={cardCenter.value}
 	{reserved}
+	postAction={async (body) => {
+		await performAction({ id: data.id, body });
+		setCurrent(undefined);
+	}}
 />
 
 <TakeModal
 	closeModal={() => setCurrent(undefined)}
 	open={target != null && !!target.dataset.coinColor}
-	game={gameCache}
+	{game}
 	targetCoin={target}
 	initialCoinColor={target == null ? null : Number(target.dataset.coinColor)}
-	player={gameCache?.players.find(({ userId }) => userId === $user?.id)}
+	player={game?.players.find(({ userId }) => userId === $user?.id)}
 	bind:center={coinCenter.value}
+	postAction={async (body) => {
+		await performAction({ id: data.id, body });
+		setCurrent(undefined);
+	}}
 />

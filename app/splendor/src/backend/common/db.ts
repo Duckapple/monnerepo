@@ -1,7 +1,4 @@
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { DATABASE_URL } from '$env/static/private';
+import { drizzle } from '@sgk/lib/db';
+import * as schema from '$lib/db/schema';
 
-const connection = neon(DATABASE_URL);
-
-export const db = drizzle(connection);
+export const db = drizzle(schema);

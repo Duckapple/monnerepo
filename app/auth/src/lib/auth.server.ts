@@ -4,8 +4,9 @@ import { username } from 'better-auth/plugins';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from './db/db.server.ts';
+import { db } from '../lib/db/db.server.ts';
 import { AUTH_PORT, AUTH_ORIGIN } from '$env/static/public';
+import { env } from '$env/dynamic/private';
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, { provider: 'pg' }),
@@ -19,17 +20,29 @@ export const auth = betterAuth({
 		accountLinking: { trustedProviders: ['discord'] },
 	},
 	verification: { modelName: 'Verification' },
-	advanced: { database: { generateId: 'uuid' } },
+	advanced: {
+		database: { generateId: 'uuid' },
+		crossSubDomainCookies: import.meta.env.DEV
+			? undefined
+			: {
+					enabled: true,
+					domain: `.${env.PARENT_ORIGIN}`,
+				},
+	},
 	socialProviders: {
 		discord: {
-			clientId: process.env.DISCORD_CLIENT_ID!,
-			clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+			clientId: env.DISCORD_CLIENT_ID,
+			clientSecret: env.DISCORD_CLIENT_SECRET,
 		},
 	},
 	plugins: [
 		username({
 			schema: { user: { modelName: 'User', fields: { username: 'userName' } } },
 			maxUsernameLength: 64,
+			usernameValidator: (username) => {
+				const usernameRegex = /^[a-zA-Z0-9_ -]+$/;
+				return usernameRegex.test(username);
+			},
 		}),
 		// Other plugins go above...
 		sveltekitCookies(getRequestEvent),

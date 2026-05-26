@@ -6,11 +6,10 @@
 
 	import Counter from '../../routes/Counter.svelte';
 	import Modal from '../Modal.svelte';
-	import { client } from '../main';
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import Person from '$lib/game/Person.svelte';
-	import { useUpdateGameState } from '$lib/state/update-game';
 	import Card from '$lib/game/Card.svelte';
+	import type { Static } from 'elysia';
+	import type { actionSchema, sixTupleType } from '$common/schema/actions';
 
 	interface Props {
 		closeModal: () => void;
@@ -21,6 +20,7 @@
 		reserved: boolean;
 		target: HTMLElement | undefined;
 		center: HTMLDivElement;
+		postAction: (body: Static<typeof actionSchema>) => Promise<void>;
 	}
 
 	let {
@@ -32,14 +32,12 @@
 		reserved,
 		target = $bindable(),
 		center = $bindable(),
+		postAction,
 	}: Props = $props();
-
-	const queryClient = useQueryClient();
-	const { updateGameState } = useUpdateGameState(queryClient);
 
 	let selectedPerson = $state<number>();
 
-	let values = $state([0, 0, 0, 0, 0, 0]);
+	let values = $state<Static<typeof sixTupleType>>([0, 0, 0, 0, 0, 0]);
 
 	let isFree = $state(false);
 
@@ -75,7 +73,9 @@
 			isFree = true;
 			return;
 		}
-		values = [...(res.error as { cost: CardType['cost'] }).cost, 0].map((i) => Math.max(0, i));
+		values = [...(res.error as { cost: CardType['cost'] }).cost, 0].map((i) =>
+			Math.max(0, i)
+		) as typeof values;
 	});
 
 	const potentialPersons = $derived(
@@ -100,86 +100,57 @@
 
 	let error = $state('');
 
-	const buyMutation = $derived(
-		createMutation({
-			mutationKey: ['action', 'BUY_CARD', cardId],
-			async mutationFn() {
-				if (!player || !game || cardId == null) {
-					error = 'Invalid initial state. Retry the action, this time slowly';
-					return;
-				}
-				const position =
-					positionFromCardId(game.shown, cardId) ??
-					reservePositionFromCardId(player.reserved, cardId);
-				if (position == null || position[0] === 'persons') {
-					error = 'Card is somehow not in play?';
-					return;
-				}
-				const [row, i] = position;
+	function buy() {
+		if (!player || !game || cardId == null) {
+			error = 'Invalid initial state. Retry the action, this time slowly';
+			return;
+		}
+		const position =
+			positionFromCardId(game.shown, cardId) ?? reservePositionFromCardId(player.reserved, cardId);
+		if (position == null || position[0] === 'persons') {
+			error = 'Card is somehow not in play?';
+			return;
+		}
+		const [row, i] = position;
 
-				const personData =
-					potentialPersons.length === 1
-						? potentialPersons[0]
-						: potentialPersons.find((p) => p[0] === selectedPerson);
-				const person = personData != null ? { id: personData[0] } : undefined;
+		const personData =
+			potentialPersons.length === 1
+				? potentialPersons[0]
+				: potentialPersons.find((p) => p[0] === selectedPerson);
+		const person = personData != null ? { id: personData[0] } : undefined;
 
-				const body = {
-					type: 'BUY_CARD',
-					data: { row, i, card: cardId, tokens: values as any, person },
-				} as const;
+		const body = {
+			type: 'BUY_CARD',
+			data: { row, i, card: cardId, tokens: values, person },
+		} as const;
 
-				const res = await client.api.action({ id: game.id }).post(body);
-				if (res.error?.value.message) {
-					error = res.error.value.message;
-					return;
-				}
-				if (res.data) {
-					updateGameState(game.id, res);
-				}
+		return postAction(body);
+	}
 
-				closeModal();
-			},
-		})
-	);
+	function reserve() {
+		if (!player || !game || cardId == null) {
+			error = 'Invalid initial state. Retry the action, this time slowly';
+			return;
+		}
+		const position = positionFromCardId(game.shown, cardId);
+		if (position == null || position[0] === 'persons') {
+			error = 'Card is somehow not in play?';
+			return;
+		}
+		const [row, i] = position;
 
-	const reserveMutation = $derived(
-		createMutation({
-			mutationKey: ['action', 'RESERVE', cardId],
-			async mutationFn() {
-				if (!player || !game || cardId == null) {
-					error = 'Invalid initial state. Retry the action, this time slowly';
-					return;
-				}
-				const position = positionFromCardId(game.shown, cardId);
-				if (position == null || position[0] === 'persons') {
-					error = 'Card is somehow not in play?';
-					return;
-				}
-				const [row, i] = position;
+		const body = {
+			type: 'RESERVE',
+			data: { row, i, card: cardId },
+		} as const;
 
-				const body = {
-					type: 'RESERVE',
-					data: { row, i, card: cardId },
-				} as const;
-
-				const res = await client.api.action({ id: game.id }).post(body);
-				if (res.error?.value.message) {
-					error = res.error.value.message;
-					return;
-				}
-				if (res.data) {
-					updateGameState(game.id, res);
-				}
-
-				closeModal();
-			},
-		})
-	);
+		return postAction(body);
+	}
 
 	const reserveAction = $derived({
 		colorClass: 'bg-amber-200',
 		text: 'Reserve',
-		handler: $reserveMutation.mutateAsync,
+		handler: reserve,
 	});
 </script>
 
@@ -191,7 +162,7 @@
 		{
 			colorClass: 'bg-green-200',
 			text: 'Buy',
-			handler: $buyMutation.mutateAsync,
+			handler: buy,
 		},
 	]}
 	title="Buy/reserve card"
@@ -235,16 +206,12 @@
 	</div>
 	{#if isFree}
 		<div>
-			You can buy it for free! <span class="text-red-700"
-				>{$buyMutation.error?.message ?? $reserveMutation.error?.message ?? error}</span
-			>
+			You can buy it for free! <span class="text-red-700">{error}</span>
 		</div>
 	{:else}
-		Want to buy this card? <span class="text-red-700"
-			>{$buyMutation.error?.message ?? $reserveMutation.error?.message ?? error}</span
-		>
+		Want to buy this card? <span class="text-red-700">{error}</span>
 		<div class="flex justify-center gap-2">
-			{#each Object.values(Color).filter(only('number')) as color}
+			{#each Object.values(Color).filter(only('number')) as color (color)}
 				<Counter
 					{color}
 					{increment}
@@ -262,7 +229,7 @@
 		By buying this card, you also get a noble.
 		{potentialPersons.length > 1 ? 'Choose one:' : ''}
 		<div class="flex justify-center gap-4 p-2 md:gap-6">
-			{#each potentialPersons as [personId]}
+			{#each potentialPersons as [personId] (personId)}
 				<div class="rounded-md ring-4 ring-offset-4" class:ring-4={selectedPerson === personId}>
 					<Person
 						card={cardFromId(personId)}

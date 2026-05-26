@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import type { Static } from 'elysia';
 	import Modal from '../Modal.svelte';
 	import { Color, type GameState, type Player } from '$common/model';
-	import { client } from '../main';
 	import { range } from '$common/utils';
-	import { useUpdateGameState } from '$lib/state/update-game';
 	import SelectTokens from './SelectTokens.svelte';
 	import { slide } from 'svelte/transition';
+	import type { actionSchema } from '$common/schema/actions';
 
 	interface Props {
 		closeModal: () => void;
@@ -16,6 +15,8 @@
 		initialCoinColor: Color | null;
 		center: HTMLDivElement;
 		targetCoin: HTMLElement | undefined;
+		postAction: (body: Static<typeof actionSchema>) => Promise<void>;
+		error?: string;
 	}
 
 	let {
@@ -26,12 +27,9 @@
 		initialCoinColor,
 		center = $bindable(),
 		targetCoin = $bindable(),
+		postAction,
+		error = $bindable(''),
 	}: Props = $props();
-
-	const queryClient = useQueryClient();
-	const { updateGameState } = useUpdateGameState(queryClient);
-
-	let error = $state('');
 
 	const onClose = $derived(() => {
 		targetCoin?.classList.remove('hidden');
@@ -95,41 +93,28 @@
 	);
 	let returnError = $state('');
 
-	let takeMutation = $derived(
-		createMutation({
-			mutationKey: ['action', 'TAKE_TOKENS'],
-			async mutationFn() {
-				if (!player || !game) {
-					error = 'Invalid initial state. Retry the action, this time slowly';
-					throw new Error();
-				}
+	function take() {
+		if (!player || !game) {
+			error = 'Invalid initial state. Retry the action, this time slowly';
+			throw new Error();
+		}
 
-				if (returns.length !== shouldReturn) {
-					returnError = 'You have to return the required amount of tokens, or take fewer tokens';
-					throw new Error();
-				}
+		if (returns.length !== shouldReturn) {
+			returnError = 'You have to return the required amount of tokens, or take fewer tokens';
+			throw new Error();
+		}
 
-				type Tokens = [number] | [number, number] | [number, number, number];
-				const body = {
-					type: 'TAKE_TOKENS',
-					data: {
-						tokens: tokens as Tokens,
-						returned: returns.length ? (returns as Tokens) : undefined,
-					},
-				} as const;
-
-				const res = await client.api.action({ id: game.id }).post(body);
-				if (res.data) {
-					updateGameState(game.id, res);
-				} else {
-					error = 'Invalid action. Retry the action, perhaps reloading the page first';
-					throw res.error;
-				}
-
-				onClose();
+		type Tokens = [number] | [number, number] | [number, number, number];
+		const body = {
+			type: 'TAKE_TOKENS',
+			data: {
+				tokens: tokens as Tokens,
+				returned: returns.length ? (returns as Tokens) : undefined,
 			},
-		})
-	);
+		} as const;
+
+		return postAction(body);
+	}
 </script>
 
 <Modal
@@ -139,7 +124,7 @@
 		{
 			colorClass: 'bg-green-200',
 			text: 'Take',
-			handler: $takeMutation.mutateAsync,
+			handler: take,
 		},
 	]}
 	class="max-w-80 md:max-w-3xl"
@@ -149,15 +134,15 @@
 	{#snippet info()}
 		<div class="space-y-1">
 			<p>On your turn, you can take up to three tokens. The following has to be satisfied:</p>
-			<ul class="pl-4 list-disc">
+			<ul class="list-disc pl-4">
 				<li class="pb-1">You may take three different tokens</li>
 				<li>You may take two of a kind, but:</li>
-				<ul class="pb-1 pl-4 list-disc">
+				<ul class="list-disc pb-1 pl-4">
 					<li>There have to be four or more tokens of that kind available</li>
 					<li>You may not take a third token</li>
 				</ul>
 				<li>You can only have a max of 10 tokens</li>
-				<ul class="pl-4 list-disc">
+				<ul class="list-disc pl-4">
 					<li>
 						If your total comes over 10 by taking tokens, you can return some to get below or at 10
 						(WIP)
@@ -183,7 +168,7 @@
 	/>
 	{#if shouldReturn}
 		<div transition:slide={{ axis: 'y' }}>
-			<h2 class="text-lg border-t mt-4 pt-4">
+			<h2 class="mt-4 border-t pt-4 text-lg">
 				Return {shouldReturn} token{shouldReturn !== 1 ? 's' : ''}
 			</h2>
 			<SelectTokens

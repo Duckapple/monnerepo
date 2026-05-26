@@ -35,6 +35,7 @@
 		"./ui": "./src/lib/ui/_.ts",
 		"./hooks": "./src/lib/hooks/_.ts",
 		"./db": "./src/lib/db/_.ts",
+		"./server": "./src/server/_.ts",
 		"./utils": "./src/lib/utils/_.ts",
 		"./global.css": "./global.css",
 		"./global.d.ts": "./global.d.ts"
@@ -55,6 +56,7 @@
 		"@testing-library/svelte": "catalog:",
 		"@total-typescript/ts-reset": "catalog:",
 		"@types/pg": "catalog:",
+		"better-auth": "catalog:",
 		"drizzle-kit": "catalog:",
 		"drizzle-orm": "catalog:",
 		"eslint": "catalog:",

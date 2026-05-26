@@ -68,4 +68,18 @@ export const LobbyParticipant = d.pgTable(
 
 export type LobbyParticipant = typeof LobbyParticipant.$inferSelect;
 
-// #region
+// #region Session
+
+export const Session = d.pgTable('Session', {
+	id: d.uuid('id').primaryKey().defaultRandom(),
+	userId: d
+		.uuid('user_id')
+		.notNull()
+		.references(() => User.id, { onDelete: 'cascade' }),
+	token: d.varchar('token', { length: 255 }).notNull().unique(),
+	expiresAt: d.timestamp('expires_at', { precision: 6, withTimezone: true }).notNull(),
+	ipAddress: d.text('ip_address'),
+	userAgent: d.text('user_agent'),
+	createdAt: d.timestamp('created_at', { precision: 6, withTimezone: true }).notNull(),
+	updatedAt: d.timestamp('updated_at', { precision: 6, withTimezone: true }).notNull(),
+});
