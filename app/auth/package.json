@@ -23,6 +23,8 @@
 	"devDependencies": {
 		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
+		"@iconify-json/ic": "catalog:",
+		"@iconify-json/lucide-lab": "catalog:",
 		"@sveltejs/adapter-auto": "catalog:",
 		"@sveltejs/kit": "catalog:",
 		"@sveltejs/package": "catalog:",
@@ -55,6 +57,7 @@
 		"tailwindcss": "catalog:",
 		"typescript": "catalog:",
 		"typescript-eslint": "catalog:",
+		"unplugin-icons": "catalog:",
 		"valibot": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:"

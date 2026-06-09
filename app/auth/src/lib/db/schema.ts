@@ -1,3 +1,4 @@
+import type { Provider } from '$lib/types/providers.ts';
 import { User } from '@sgk/lib/db';
 import * as d from 'drizzle-orm/pg-core';
 
@@ -8,7 +9,7 @@ export const Account = d.pgTable('Account', {
 		.notNull()
 		.references(() => User.id, { onDelete: 'cascade' }),
 	accountId: d.text('account_id').notNull(),
-	providerId: d.text('provider_id').notNull().$type<'credential' | 'discord' | 'meme-api'>(),
+	providerId: d.text('provider_id').notNull().$type<Provider>(),
 	accessToken: d.text('access_token'),
 	refreshToken: d.text('refresh_token'),
 	accessTokenExpiresAt: d.timestamp('access_token_expires_at', {
