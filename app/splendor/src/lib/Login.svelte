@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { loginRegister } from '$lib/main';
-	import { createMutation } from '@tanstack/svelte-query';
 	import Spinner from '$lib/Spinner.svelte';
 
 	interface Props {
@@ -16,26 +15,18 @@
 	let register = $state(false);
 
 	const pw = 'password';
-
-	const loginMutation = createMutation({
-		mutationKey: ['login'],
-		mutationFn: async () => {
-			await loginRegister({ userName, password }, register);
-			onSuccess();
-		},
-	});
 </script>
 
 <form
 	onsubmit={(e) => {
 		e.preventDefault();
-		$loginMutation.mutate();
+		// $loginMutation.mutate();
 	}}
 	class="flex flex-col"
 >
 	<label for="userName">User name</label>
 	<input
-		class="p-1 border rounded-sm border-slate-500"
+		class="rounded-sm border border-slate-500 p-1"
 		type="text"
 		name="userName"
 		id="userName"
@@ -44,35 +35,35 @@
 	/>
 	<label for="password">Password</label>
 	<input
-		class="p-1 border rounded-sm border-slate-500"
+		class="rounded-sm border border-slate-500 p-1"
 		type="password"
 		name={pw}
 		id={pw}
 		bind:value={password}
 		autocomplete="current-password"
 	/>
-	{#if $loginMutation.error}
+	<!-- {#if $loginMutation.error}
 		<span class="text-red-700">{$loginMutation.error?.message}</span>
-	{/if}
+	{/if} -->
 	<div class="flex gap-2">
 		<button
-			class="grow p-1 mt-2 border rounded-sm border-slate-500"
+			class="mt-2 grow rounded-sm border border-slate-500 p-1"
 			onclick={() => (register = true)}
 			type="submit"
 		>
-			{#if $loginMutation.isPending && register}
+			<!-- {#if $loginMutation.isPending && register}
 				<Spinner />
-			{/if}
+			{/if} -->
 			Register
 		</button>
 		<button
-			class="grow p-1 mt-2 border rounded-sm border-slate-500"
+			class="mt-2 grow rounded-sm border border-slate-500 p-1"
 			onclick={() => (register = false)}
 			type="submit"
 		>
-			{#if $loginMutation.isPending && !register}
+			<!-- {#if $loginMutation.isPending && !register}
 				<Spinner />
-			{/if}
+			{/if} -->
 			Log in
 		</button>
 	</div>

@@ -13,93 +13,122 @@ import { err, ok } from 'neverthrow';
 const playerAgain = alias(SplendorGamePlayer, 'player2');
 const partAgain = alias(LobbyParticipant, 'part2');
 
+export async function getAll(userId: string, showEnded?: boolean) {
+	const conditions = [eq(playerAgain.userId, userId)];
+	if (!showEnded) {
+		conditions.push(ne(SplendorGame.phase, GamePhase.FINISHED));
+	}
+	const [games, lobbies] = await Promise.all([
+		getGame(conditions.length > 1 ? (and(...conditions) as SQL) : conditions[0], true),
+		getLobbies(userId),
+	]);
+	return { games, lobbies };
+}
+
+export async function getById(id: string, userId: string) {
+	if (id.length < 20) {
+		const lobby = await oneLobby({ id, userId });
+
+		if (lobby.isOk()) return ok({ lobby: lobby.value, game: null });
+
+		if (lobby.isErr() && lobby.error.message === 'Not in lobby') return err('NOT_IN_ROOM' as const);
+
+		return err('NOT_FOUND' as const);
+	}
+
+	const [data] = await getGame(eq(SplendorGame.id, id) as SQL);
+
+	if (data == null) return err('NOT_FOUND' as const);
+
+	if (data.players.every((player) => player.userId !== userId)) {
+		return err('NOT_IN_ROOM' as const);
+	}
+
+	return ok({ game: data, lobby: null });
+}
+
+export async function put(
+	id: string,
+	user: {
+		id: string;
+		userName: string;
+	}
+) {
+	const roomAndPlayers = await getLobby({ id });
+
+	if (roomAndPlayers.length === 0) {
+		return err('NOT_FOUND');
+	}
+
+	const [lobby] = roomAndPlayers;
+
+	const players = roomAndPlayers.map(({ participant }) => participant);
+
+	let message = "You're already in the room!";
+
+	if (players.length < 4 && players.every((player) => player.userId !== user.id)) {
+		const length = players.length as 0 | 1 | 2 | 3;
+		const newPlayer = {
+			lobbyCode: id,
+			userId: user.id,
+			order: length,
+		};
+		await db.insert(LobbyParticipant).values(newPlayer);
+		players.push({
+			userId: user.id,
+			order: length,
+			userName: user.userName,
+			owner: false,
+			joinedAt: new Date(),
+		});
+		message = 'Joined the room!';
+	}
+
+	return ok({ message, lobby: { lobby: lobby.Lobby, players } });
+}
+
+export async function post(user: { id: string; userName: string }) {
+	const code = encodeBase58(randomInt(58 ** 6), 6);
+	const inserts = [
+		db.insert(Lobby).values({ code, gameType: 'splendor' }),
+		db.insert(LobbyParticipant).values({ lobbyCode: code, userId: user.id, owner: true, order: 0 }),
+	];
+	const players = [{ userId: user.id, order: 0, owner: true, userName: user.userName }];
+	await Promise.all(inserts);
+	return { code, players };
+}
+
 export const room = new Elysia({ prefix: '/room' })
 	.use(Auth)
 	.guard({ auth: true })
 	.get(
 		'/',
 		async ({ user, query: { showEnded } = {} }) => {
-			const conditions = [eq(playerAgain.userId, user.id)];
-			if (!showEnded) {
-				conditions.push(ne(SplendorGame.phase, GamePhase.FINISHED));
-			}
-			const [game, lobby] = await Promise.all([
-				getGame(conditions.length > 1 ? (and(...conditions) as SQL) : conditions[0], true),
-				getLobbies(user.id),
-			]);
-			return {
-				game,
-				lobby,
-			};
+			const { games, lobbies } = await getAll(user.id, showEnded);
+			return { game: games, lobby: lobbies };
 		},
 		{ query: t.Optional(t.Object({ showEnded: t.Optional(t.Boolean()) })) }
 	)
 	.get('/:id', async ({ user, params: { id }, error }) => {
-		if (id.length < 20) {
-			const lobby = await oneLobby({ id, userId: user.id });
-
-			if (lobby.isOk()) return { lobby: lobby.value, game: null };
-
-			if (lobby.isErr() && lobby.error.message === 'Not in lobby')
+		const result = await getById(id, user.id);
+		if (result.isErr()) {
+			const errType = result.error;
+			if (errType === 'NOT_IN_ROOM') {
 				return error(404, { message: 'Not part of room', data: 'NOT_IN_ROOM' as const });
-
+			}
 			return error(404, { message: 'Not Found' });
 		}
-
-		const [data] = await getGame(eq(SplendorGame.id, id) as SQL);
-
-		if (data == null) return error(404, { message: 'Not Found' });
-
-		if (data.players.every((player) => player.userId !== user.id)) {
-			return error(404, { message: 'Not part of room', data: 'NOT_IN_ROOM' as const });
-		}
-
-		return { game: data, lobby: null };
+		return result.value;
 	})
 	.post('/', async ({ user }) => {
-		const code = encodeBase58(randomInt(58 ** 6), 6);
-		const inserts = [
-			db.insert(Lobby).values({ code, gameType: 'splendor' }),
-			db
-				.insert(LobbyParticipant)
-				.values({ lobbyCode: code, userId: user.id, owner: true, order: 0 }),
-		];
-		const players = [{ userId: user.id, order: 0, owner: true, userName: user.userName }];
-		await Promise.all(inserts);
-		return { code, players };
+		return post({ id: user.id, userName: user.userName });
 	})
 	.put('/:id', async ({ user, params: { id }, error }) => {
-		const roomAndPlayers = await getLobby({ id });
-
-		if (roomAndPlayers.length === 0) {
+		const result = await put(id, { id: user.id, userName: user.userName });
+		if (result.isErr()) {
 			return error(404, { message: 'Not Found' });
 		}
-
-		const [lobby] = roomAndPlayers;
-
-		const players = roomAndPlayers.map(({ participant }) => participant);
-
-		let message = "You're already in the room!";
-
-		if (players.length < 4 && players.every((player) => player.userId !== user.id)) {
-			const length = players.length as 0 | 1 | 2 | 3;
-			const newPlayer = {
-				lobbyCode: id,
-				userId: user.id,
-				order: length,
-			};
-			await db.insert(LobbyParticipant).values(newPlayer);
-			players.push({
-				userId: user.id,
-				order: length,
-				userName: user.userName,
-				owner: false,
-				joinedAt: new Date(),
-			});
-			message = 'Joined the room!';
-		}
-
-		return { message, lobby: { lobby: lobby.Lobby, players } };
+		return result.value;
 	});
 
 export async function getGame(where: ReturnType<typeof eq>, inRoom?: true) {

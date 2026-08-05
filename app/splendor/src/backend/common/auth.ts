@@ -7,7 +7,7 @@ export const authSchema = t.Object({ id: t.String(), userName: t.String() });
 
 export const loginSchema = t.Object({
 	userName: t.String({ minLength: 2, maxLength: 64 }),
-	password: t.String({ minLength: 8, maxLength: 128 })
+	password: t.String({ minLength: 8, maxLength: 128 }),
 });
 
 export class FunctionError extends Error {
@@ -25,14 +25,14 @@ export const Auth = new Elysia({ name: 'Service.Auth' })
 			secret: JWT_SECRET!,
 			name: 'jwt',
 			alg: 'HS512',
-			schema: authSchema
+			schema: authSchema,
 		})
 	)
 	.derive({ as: 'scoped' }, async ({ headers, jwt, cookie }) => {
 		const bearer = cookie.accessToken.value ?? headers.authorization?.split(' ')[1];
 		return {
 			bearer,
-			user: (await jwt.verify(bearer)) as Static<typeof authSchema>
+			user: (await jwt.verify(bearer)) as Static<typeof authSchema>,
 		};
 	})
 	.macro(({ onBeforeHandle }) => ({
@@ -40,5 +40,5 @@ export const Auth = new Elysia({ name: 'Service.Auth' })
 			onBeforeHandle(async ({ user, error }) => {
 				if (!user) return error(401, { message: 'Unauthorized', data: 'Invalid JWT Token' });
 			});
-		}
+		},
 	}));

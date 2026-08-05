@@ -1,7 +1,6 @@
-import { roomQuery } from './_queries.js';
+import { redirect } from '@sveltejs/kit';
 
-export async function load({ parent, fetch, url }) {
-	const { queryClient } = await parent();
+export async function load({ url }) {
 	const id = url.searchParams.get('id');
-	await queryClient.prefetchQuery(roomQuery(fetch, id));
+	return redirect(302, `/new/${id}`);
 }
