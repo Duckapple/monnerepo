@@ -27,7 +27,7 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [
 	...build, // the app itself
-	...files // everything in `static`
+	...files, // everything in `static`
 ];
 
 sw.addEventListener('install', (event) => {
@@ -98,18 +98,18 @@ channel.addEventListener('message', async (e) => {
 			try {
 				const options = {
 					applicationServerKey: publicKey,
-					userVisibleOnly: true
+					userVisibleOnly: true,
 				};
 				const subscription = /** @type {*} */ (
 					await sw.registration.pushManager.subscribe(options)
 				);
 				const response = await client.api.notifications.index.post(subscription, {
-					headers: { Authorization: `Bearer ${data.jwt}` }
+					headers: { Authorization: `Bearer ${data.jwt}` },
 				});
 				channel.postMessage({
 					type: 'notifications',
 					response: response.data ?? response.error,
-					status: response.status
+					status: response.status,
 				});
 			} catch (error) {
 				channel.postMessage({ type: 'notifications', response: error, status: 500 });
@@ -147,7 +147,7 @@ sw.addEventListener('push', async (event) => {
 				badge: '/favicon.png',
 				tag: rest.type + (rest.gameId ?? ''),
 				data: rest,
-				actions
+				actions,
 			})
 		);
 	} else {

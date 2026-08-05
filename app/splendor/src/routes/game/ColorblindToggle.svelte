@@ -11,5 +11,5 @@
 	onpointerleave={() => (hovering = false)}
 	onclick={() => (colorblind.value = !colorblind.value)}
 >
-	<Icon icon={hovering ? 'gem-heart' : 'gem-hexagon'} class="size-6 md:size-8 rotate-12" />
+	<Icon icon={hovering ? 'gem-heart' : 'gem-hexagon'} class="size-6 rotate-12 md:size-8" />
 </button>

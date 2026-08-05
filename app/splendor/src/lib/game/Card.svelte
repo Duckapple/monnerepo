@@ -71,13 +71,13 @@
 <button
 	bind:this={ref}
 	class={[
-		'flex flex-col justify-between w-14 h-[5.5rem] first:mt-0 transition-[transform,scale,opacity] rounded-lg border border-black select-none shadow-lg aspect-square bg-linear-to-bl outline-offset-4 focus:outline outline-blue-500',
+		'flex aspect-square h-[5.5rem] w-14 flex-col justify-between rounded-lg border border-black bg-linear-to-bl shadow-lg outline-offset-4 outline-blue-500 transition-[transform,scale,opacity] select-none first:mt-0 focus:outline',
 		cardStyle,
 		gradientOf[card.c],
 		{
 			'md:-mt-32': stacked && !small,
 			'-mt-16 cursor-default': stacked,
-			'hover:scale-110 hover:z-10': !stacked,
+			'hover:z-10 hover:scale-110': !stacked,
 			'-rotate-90': rotated,
 		},
 	]}
@@ -88,7 +88,7 @@
 	{style}
 >
 	<div
-		class="px-1 text-3xl rounded-t-lg text-left w-full flex items-center justify-between {pointStyle} {fadeText
+		class="flex w-full items-center justify-between rounded-t-lg px-1 text-left text-3xl {pointStyle} {fadeText
 			? fadeTextBgColorOf[card.c]
 			: bgColorOf[card.c]}"
 	>
@@ -100,21 +100,21 @@
 	</div>
 	<div
 		class={[
-			'text-sm pl-1 pb-1 grid w-12 gap-1 leading-none',
+			'grid w-12 gap-1 pb-1 pl-1 text-sm leading-none',
 			costStyle,
 			cols[filteredLength - 1],
-			colorBlind.value && 'md:gap-y-2 md:gap-x-6',
+			colorBlind.value && 'md:gap-x-6 md:gap-y-2',
 		]}
 	>
 		{#each card.cost as co, i}
 			{#if filteredLength === 3 && secondPos === i}
-				<div class={[!small && 'md:hidden md:-order-1']}></div>
+				<div class={[!small && 'md:-order-1 md:hidden']}></div>
 			{/if}
 			{#if !hideCost && co}
 				{@const bg = bgColorOf[i]}
 				<span
 					class={[
-						'relative z-0 p-0.5 w-5 flex justify-center items-center rounded-full aspect-square',
+						'relative z-0 flex aspect-square w-5 items-center justify-center rounded-full p-0.5',
 						bg,
 						!small && 'md:w-8 md:p-1',
 					]}
@@ -123,9 +123,9 @@
 					{#if colorBlind.value}
 						<div
 							class={[
-								'absolute -z-10 -right-1 top-0 flex justify-end items-center w-5 rounded-full',
+								'absolute top-0 -right-1 -z-10 flex w-5 items-center justify-end rounded-full',
 								bg,
-								!small && 'md:w-10 md:pr-px md:h-6 md:-right-3',
+								!small && 'md:-right-3 md:h-6 md:w-10 md:pr-px',
 							]}
 						>
 							<Icon icon={iconOf[i]} class={['size-3 rotate-12', !small && 'md:size-5']} />

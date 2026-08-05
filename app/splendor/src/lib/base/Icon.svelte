@@ -12,7 +12,7 @@
 <svg
 	viewBox={iconSvgs[icon].viewBox}
 	class={[
-		'inline-block shrink-0 stroke-current [stroke-linejoin:round] [stroke-linecap:round] bg-transparent!',
+		'inline-block shrink-0 bg-transparent! stroke-current [stroke-linecap:round] [stroke-linejoin:round]',
 		className,
 		className.includes('fill-') ? '' : 'fill-transparent',
 	]}

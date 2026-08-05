@@ -33,7 +33,7 @@
 	onclick={onclick && ((e) => stackSize && onclick(e))}
 	{onkeypress}
 	class={[
-		'flex flex-col w-10 h-10 transition-[transform,opacity] group',
+		'group flex h-10 w-10 flex-col transition-[transform,opacity]',
 		!small && boxMd,
 		cn,
 		onclick && stackSize ? 'cursor-pointer' : 'cursor-default',
@@ -43,7 +43,7 @@
 		{@const top = !hideNumber && i + 1 === stackSize}
 		<div
 			class="{!small &&
-				coinMd} relative h-10 w-10 select-none transition-transform flex justify-center items-center last:mb-0 -mb-11 group-hover:last:-translate-y-2 rounded-full aspect-square ring-2 {bgColorOf[
+				coinMd} relative -mb-11 flex aspect-square h-10 w-10 items-center justify-center rounded-full ring-2 transition-transform select-none last:mb-0 group-hover:last:-translate-y-2 {bgColorOf[
 				color
 			]} {ringColorOf[color]}"
 		>

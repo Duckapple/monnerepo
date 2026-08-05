@@ -63,13 +63,13 @@
 <div
 	onclick={(e) => e.target === element && closeModal()}
 	onkeypress={(e) => e.target === element && e.key === 'Escape' && closeModal()}
-	class="fixed top-0 bottom-0 left-0 right-0 z-10 flex items-center justify-center bg-slate-600/40"
+	class="fixed top-0 right-0 bottom-0 left-0 z-10 flex items-center justify-center bg-slate-600/40"
 	class:hidden={!open}
 	bind:this={element}
 >
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class={['p-4 md:p-6 bg-white rounded-lg md:rounded-2xl shadow-sm', cn]}
+		class={['rounded-lg bg-white p-4 shadow-sm md:rounded-2xl md:p-6', cn]}
 		onclick={(e) => {
 			e.stopPropagation();
 			onclick?.(e);
@@ -83,7 +83,7 @@
 	>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<h1
-			class="flex justify-between text-xl cursor-grab"
+			class="flex cursor-grab justify-between text-xl"
 			onmousedown={(e) => {
 				e.stopPropagation();
 				dragOrigin = { x: e.screenX, y: e.screenY };
@@ -113,7 +113,7 @@
 			{#each allActions as action}
 				<!-- svelte-ignore a11y_autofocus -->
 				<button
-					class={'px-3 py-1 border border-slate-500 rounded-md ' + action.colorClass}
+					class={'rounded-md border border-slate-500 px-3 py-1 ' + action.colorClass}
 					autofocus={action.text === 'Cancel'}
 					onclick={() => action.handler()}
 					onkeypress={(e) => ['Space', 'Enter'].includes(e.key) && action.handler()}

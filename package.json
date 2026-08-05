@@ -3,6 +3,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"format": "prettier --write .",
 		"apps": "bun --env-file=.env --parallel --no-exit-on-error --filter './app/*'",
 		"all": "bun --env-file=.env --parallel --no-exit-on-error --filter '*'",
 		"deploy": "cd .devops && bun --env-file=../.env deploy.ts",

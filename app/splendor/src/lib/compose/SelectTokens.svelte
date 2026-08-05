@@ -29,15 +29,15 @@
 	let leftOverOfEach = $derived((holdTokens ?? []).map((count, i) => count - takenOfEach[i]));
 </script>
 
-<div class="flex flex-col-reverse gap-4 pt-4 md:pt-2 pb-2 md:gap-8">
+<div class="flex flex-col-reverse gap-4 pt-4 pb-2 md:gap-8 md:pt-2">
 	{#if error}
-		<span transition:slide={{ axis: 'y', duration: 150 }} class="text-sm md:text-base text-red-700"
+		<span transition:slide={{ axis: 'y', duration: 150 }} class="text-sm text-red-700 md:text-base"
 			>{error}</span
 		>
 	{/if}
 	<div class="relative flex gap-1.5 md:gap-4">
 		<div
-			class="absolute size-10 md:size-24 flex justify-center items-center"
+			class="absolute flex size-10 items-center justify-center md:size-24"
 			style="left: calc({initialCoinColor ?? 0} * var(--coin-with-gap))"
 		>
 			<div bind:this={center}></div>

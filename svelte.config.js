@@ -8,16 +8,16 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		experimental: {
-			remoteFunctions: true
-		}
+			remoteFunctions: true,
+		},
 	},
 	extensions: ['.svelte', '.svx'],
 	compilerOptions: {
 		experimental: {
-			async: true
+			async: true,
 		},
-		runes: true
-	}
+		runes: true,
+	},
 };
 
 export default config;

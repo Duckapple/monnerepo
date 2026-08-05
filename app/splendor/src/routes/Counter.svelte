@@ -44,13 +44,13 @@
 </script>
 
 <div
-	class="flex flex-col my-4 rounded-t-md md:rounded-t-xl rounded-b-md md:rounded-b-xl"
+	class="my-4 flex flex-col rounded-t-md rounded-b-md md:rounded-t-xl md:rounded-b-xl"
 	class:shadow={!noButtons}
 >
 	{#if !noButtons}
 		<button
 			class={[
-				'flex flex-col gap-1 items-center justify-center p-0 md:p-1 bg-transparent border-0 rounded-t-md md:rounded-t-xl touch-manipulation',
+				'flex touch-manipulation flex-col items-center justify-center gap-1 rounded-t-md border-0 bg-transparent p-0 md:rounded-t-xl md:p-1',
 				value >= max && 'cursor-not-allowed',
 				value < max && 'hover:bg-slate-200',
 			]}
@@ -58,12 +58,12 @@
 			aria-label="Increase the counter by one"
 		>
 			{#if colorblind.value}
-				<Icon icon={iconOf[color]} class={['rotate-12 size-6 mx-auto', textColorOf[color]]} />
+				<Icon icon={iconOf[color]} class={['mx-auto size-6 rotate-12', textColorOf[color]]} />
 			{/if}
 			<svg aria-hidden="true" viewBox="0 0 1 1" class="size-4 flex-none">
 				<path
 					class={[
-						'[vector-effect:non-scaling-stroke] stroke-2',
+						'stroke-2 [vector-effect:non-scaling-stroke]',
 						value < max && 'stroke-zinc-700',
 						value >= max && 'stroke-zinc-300',
 					]}
@@ -77,7 +77,7 @@
 
 	<div
 		class={[
-			'w-8 h-12 md:w-14 md:h-16 overflow-hidden text-center relative cursor-default border-red-500 ',
+			'relative h-12 w-8 cursor-default overflow-hidden border-red-500 text-center md:h-16 md:w-14 ',
 			textColorOf[color],
 			value === 0 && 'text-opacity-60',
 			invalid && 'border-b-2',
@@ -88,10 +88,10 @@
 			style="transform: translate(0, {100 * offset}%)"
 		>
 			<span
-				class="absolute flex items-center justify-center w-full h-full select-none -top-full"
+				class="absolute -top-full flex h-full w-full items-center justify-center select-none"
 				aria-hidden="true">{Math.floor(displayed_count.current + 1)}</span
 			>
-			<span class="absolute flex items-center justify-center w-full h-full"
+			<span class="absolute flex h-full w-full items-center justify-center"
 				>{Math.floor(displayed_count.current)}</span
 			>
 		</div>
@@ -100,7 +100,7 @@
 	{#if !noButtons}
 		<button
 			class={[
-				'flex items-center justify-center h-6 p-0 bg-transparent border-0 md:h-8 rounded-b-md md:rounded-b-xl touch-manipulation',
+				'flex h-6 touch-manipulation items-center justify-center rounded-b-md border-0 bg-transparent p-0 md:h-8 md:rounded-b-xl',
 				value <= min && 'cursor-not-allowed',
 				value !== min && 'hover:bg-slate-200',
 			]}
@@ -110,7 +110,7 @@
 			<svg aria-hidden="true" viewBox="0 0 1 1" class="size-1/2">
 				<path
 					class={[
-						'[vector-effect:non-scaling-stroke] stroke-2',
+						'stroke-2 [vector-effect:non-scaling-stroke]',
 						value !== min && 'stroke-zinc-700',
 						value <= min && 'stroke-zinc-300',
 					]}

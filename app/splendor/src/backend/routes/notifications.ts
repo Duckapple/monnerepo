@@ -14,7 +14,7 @@ export async function post(user: AuthUser, req: Infer<typeof post.params>) {
 		{ userId: user.id, ...subscriptionInput },
 		{
 			message: "You've turned on notifications!",
-			type: 'notifications'
+			type: 'notifications',
 		}
 	);
 

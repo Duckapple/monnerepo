@@ -55,7 +55,7 @@
 	></div>
 	<div
 		class={[
-			'flex flex-col h-screen gap-2 overflow-hidden origin-top-left bg-slate-50',
+			'flex h-screen origin-top-left flex-col gap-2 overflow-hidden bg-slate-50',
 			!small && 'md:gap-4',
 		]}
 		style="transform: translate({dX}px, -{dY}px) rotate(12deg) scale(1.5);"
