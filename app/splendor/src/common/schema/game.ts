@@ -10,6 +10,7 @@ const idDecksSchema = t.Object({
 });
 
 // prettier-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _tokensTuple = t.Tuple([
 	t.Number(),	t.Number(),	t.Number(),
 	t.Number(),	t.Number(),	t.Number(),

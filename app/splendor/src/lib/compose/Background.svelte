@@ -60,9 +60,9 @@
 		]}
 		style="transform: translate({dX}px, -{dY}px) rotate(12deg) scale(1.5);"
 	>
-		{#each Array(y) as _}
+		{#each Array(y) as _, i (i)}
 			<div class={['flex gap-2', !small && 'md:gap-4']}>
-				{#each Array(x) as _}
+				{#each Array(x) as _, j (j)}
 					<Card {card} {small} />
 				{/each}
 			</div>

@@ -14,8 +14,8 @@
 		max?: number;
 		invalid?: boolean;
 		noButtons?: boolean;
-		decrement?: any;
-		increment?: any;
+		decrement?: (_: Color) => void;
+		increment?: (_: Color) => void;
 	}
 
 	const {

@@ -11,7 +11,7 @@ export async function post(
 ) {
 	const id = crypto.randomUUID();
 	const bcryptPassword = Bun.password.hash(password, { algorithm: 'bcrypt', cost: 12 });
-	const [_, jwt] = await Promise.all([
+	const [, jwt] = await Promise.all([
 		bcryptPassword.then((bcrypt) =>
 			db.insert(User).values({ id, userName, bcrypt, email: `${userName}@auth.simon-green.dev` })
 		),

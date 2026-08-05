@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { loginRegister } from '$lib/main';
-	import Spinner from '$lib/Spinner.svelte';
-
 	interface Props {
 		onSuccess: () => void;
 	}
 
-	const { onSuccess }: Props = $props();
+	const _props: Props = $props();
 
 	let userName = $state('');
 

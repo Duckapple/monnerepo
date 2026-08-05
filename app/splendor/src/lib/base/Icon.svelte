@@ -17,5 +17,7 @@
 		className.includes('fill-') ? '' : 'fill-transparent',
 	]}
 >
+  <!-- It's safe, we control the import -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html iconSvgs[icon].children}
 </svg>

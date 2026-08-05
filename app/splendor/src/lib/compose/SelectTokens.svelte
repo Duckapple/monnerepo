@@ -42,12 +42,12 @@
 		>
 			<div bind:this={center}></div>
 		</div>
-		{#each leftOverOfEach ?? [] as stackSize, color}
+		{#each leftOverOfEach ?? [] as stackSize, color (color)}
 			<Coin {color} {stackSize} onclick={() => stackSize > 0 && tryTake(color)} />
 		{/each}
 	</div>
 	<div class="relative flex gap-1.5 md:gap-4">
-		{#each takenOfEach as stackSize, color}
+		{#each takenOfEach as stackSize, color (color)}
 			<Coin {color} {stackSize} onclick={() => tryReturn(color)} />
 		{/each}
 	</div>

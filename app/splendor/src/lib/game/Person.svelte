@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Card } from '$common/model';
-	import Icon from '$lib/base/Icon.svelte';
-	import { bgColorOf, iconOf } from '$lib/color';
-	import { useRuneContext } from '$lib/state/context-rune.svelte';
+	import { bgColorOf } from '$lib/color';
 	import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
 	interface Props {
 		card: Card;
@@ -30,7 +28,7 @@
 >
 	<span class="absolute top-0 left-1 text-3xl leading-none {pointsMd}">{p}</span>
 	<div class="absolute bottom-1 left-1 flex gap-0.5 leading-none {costsMd}">
-		{#each cost as co, i}
+		{#each cost as co, i (i)}
 			{#if co}
 				{@const bg = bgColorOf[i]}
 				<span class={['relative rounded-xs border border-black p-[1pt] text-center', costMd, bg]}>

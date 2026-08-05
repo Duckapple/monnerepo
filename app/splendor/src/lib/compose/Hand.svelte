@@ -54,7 +54,7 @@
 	{#if persons.length}
 		<h2 class="text-sm">Nobles</h2>
 		<div class="flex gap-2">
-			{#each persons as person}
+			{#each persons as person (person)}
 				<Person card={person} small />
 			{/each}
 		</div>
@@ -68,10 +68,10 @@
 		</div>
 	{/if}
 	<div class="flex gap-2">
-		{#each shownCards as cardStack}
+		{#each shownCards as cardStack, i (i)}
 			{#if cardStack.length > 0}
 				<div class="flex flex-col">
-					{#each cardStack as card}
+					{#each cardStack as card, i (i)}
 						<Card {card} hideCost stacked small />
 					{/each}
 				</div>
@@ -80,7 +80,7 @@
 	</div>
 	<h2 class="text-sm">Coins</h2>
 	<div class="flex min-h-12 gap-2">
-		{#each player.tokens as stackSize, color}
+		{#each player.tokens as stackSize, color (color)}
 			<Coin small {stackSize} {color} />
 		{/each}
 	</div>
@@ -94,7 +94,7 @@
 	{/if}
 	<div class="relative" class:min-h-14={player.reserved.length !== 0}>
 		<div class="-mt-4 flex space-x-10 pl-4">
-			{#each player.reserved as cardId}
+			{#each player.reserved as cardId, i (i)}
 				<Card
 					card={cardFromId(cardId)}
 					small={cardId !== targetCardId}

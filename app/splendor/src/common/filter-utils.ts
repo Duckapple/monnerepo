@@ -6,7 +6,7 @@
  * const x = [{ a: true }, { a: null }, { a: undefined }, {}].filter(assertField('a'));
  * //    x = [{ a: true }] satisfies { a: boolean }[];
  */
- 
+
 export function assertField<Field extends string, T extends { [K in Field]?: unknown }>(
 	field: Field
 ) {
@@ -14,7 +14,7 @@ export function assertField<Field extends string, T extends { [K in Field]?: unk
 		field in item && item[field] != null;
 }
 
-function assertNotNull<T>(item: T): item is NonNullable<T> {
+export function assertNotNull<T>(item: T): item is NonNullable<T> {
 	return item != null;
 }
 

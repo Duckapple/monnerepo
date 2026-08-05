@@ -1,4 +1,6 @@
+// lets just keep this one around
 // prettier-ignore
+// eslint-disable-next-line no-restricted-syntax
 export enum Color { W, U, G, R, B, Y }
 
 export interface Card {
@@ -24,6 +26,8 @@ export type Player = {
 
 export type ID = string;
 
+// lets just keep this one around
+// eslint-disable-next-line no-restricted-syntax
 export enum GamePhase {
 	PLAYING,
 	ENDING,

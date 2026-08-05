@@ -39,7 +39,7 @@
 		onclick && stackSize ? 'cursor-pointer' : 'cursor-default',
 	]}
 >
-	{#each Array(stackSize) as _, i}
+	{#each Array(stackSize) as _, i (i)}
 		{@const top = !hideNumber && i + 1 === stackSize}
 		<div
 			class="{!small &&

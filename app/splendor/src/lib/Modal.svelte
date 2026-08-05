@@ -95,7 +95,7 @@
 					size="xl"
 					onpointerenter={() => {
 						if (window.matchMedia('(min-width: 768px)').matches) return;
-						target && target.setAttribute('style', target.getAttribute('style') + '; opacity: 0');
+						if (target) target.setAttribute('style', target.getAttribute('style') + '; opacity: 0');
 					}}
 					onpointerleave={() =>
 						target &&
@@ -110,7 +110,7 @@
 		</h1>
 		{@render children?.()}
 		<div class="flex justify-end gap-2 pt-2">
-			{#each allActions as action}
+			{#each allActions as action, i (i)}
 				<!-- svelte-ignore a11y_autofocus -->
 				<button
 					class={'rounded-md border border-slate-500 px-3 py-1 ' + action.colorClass}

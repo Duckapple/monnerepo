@@ -106,11 +106,11 @@
 			colorBlind.value && 'md:gap-x-6 md:gap-y-2',
 		]}
 	>
-		{#each card.cost as co, i}
+		{#each card.cost as cost, i (i)}
 			{#if filteredLength === 3 && secondPos === i}
 				<div class={[!small && 'md:-order-1 md:hidden']}></div>
 			{/if}
-			{#if !hideCost && co}
+			{#if !hideCost && cost}
 				{@const bg = bgColorOf[i]}
 				<span
 					class={[
@@ -119,7 +119,7 @@
 						!small && 'md:w-8 md:p-1',
 					]}
 				>
-					{co}
+					{cost}
 					{#if colorBlind.value}
 						<div
 							class={[

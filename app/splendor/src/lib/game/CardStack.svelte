@@ -10,7 +10,7 @@
 </script>
 
 <div class="group h-[5.5rem] w-14 select-none md:h-48 md:w-32">
-	{#each Array(stackSize) as _, i}
+	{#each Array(stackSize) as _, i (i)}
 		<div
 			class="-mb-[5.75rem] h-[5.5rem] w-14 rounded-lg border border-black bg-white p-1 transition-transform last:mb-0 group-hover:last:-translate-y-2 md:-mb-[12.5rem] md:h-48 md:w-32 md:p-2"
 		>

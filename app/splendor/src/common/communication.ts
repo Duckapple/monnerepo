@@ -16,5 +16,3 @@ type SplendorGameIsh = Omit<SplendorGame, 'createdAt' | 'updatedAt'> & {
 export type GameAndPlayers = SplendorGameIsh & {
 	players: (SplendorGamePlayer & { userName: string })[];
 };
-
-export type Routes = {};
