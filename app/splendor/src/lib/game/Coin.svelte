@@ -14,7 +14,7 @@
 		class?: string;
 	}
 
-	let {
+	const {
 		color,
 		stackSize = 1,
 		hideNumber = false,

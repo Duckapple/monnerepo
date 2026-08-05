@@ -10,7 +10,7 @@
 		gameId: string;
 	}
 
-	let { gameId }: Props = $props();
+	const { gameId }: Props = $props();
 	let target: HTMLElement | undefined = $state();
 	function setCurrent(newVal: HTMLElement | undefined) {
 		if (target) {
@@ -21,9 +21,9 @@
 
 	const actions = getActions(gameId);
 
-	let orderedActions = $derived((actions.current ?? []).toReversed());
+	const orderedActions = $derived((actions.current ?? []).toReversed());
 
-	let cardClick = $derived((card: EventTarget | null) => {
+	const cardClick = $derived((card: EventTarget | null) => {
 		if (!(card instanceof HTMLElement)) return;
 		if (target === card) {
 			setCurrent(undefined);

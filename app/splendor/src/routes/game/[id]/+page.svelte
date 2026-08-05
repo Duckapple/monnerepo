@@ -23,8 +23,8 @@
 
 	const { data } = $props();
 
-	let cardCenter = $state({ value: undefined as unknown as HTMLDivElement });
-	let coinCenter = $state({ value: undefined as unknown as HTMLDivElement });
+	const cardCenter = $state({ value: undefined as unknown as HTMLDivElement });
+	const coinCenter = $state({ value: undefined as unknown as HTMLDivElement });
 	let target: HTMLElement | undefined = $state(undefined);
 	let reserved = $state(false);
 

@@ -11,15 +11,15 @@
 		onkeypress?: KeyboardEventHandler<HTMLButtonElement> | null;
 	}
 
-	let { card, small = false, onclick, onkeypress }: Props = $props();
+	const { card, small = false, onclick, onkeypress }: Props = $props();
 	const { cost, id, p } = card;
 	const persons = ['👨🏼‍🌾', '👩🏽‍🔧', '👩🏿‍💻', '🧑🏻‍💼', '👨🏽‍🎨', '👩🏿‍🚒', '🕵🏼', '👸🏾', '🤵🏻‍♂️', '🧙🏽‍♂️'];
 
-	let buttonMd = $derived(small ? '' : 'md:w-32 md:h-32 md:text-4xl');
-	let pointsMd = $derived(small ? '' : 'md:text-6xl md:left-2 md:top-1');
-	let costsMd = $derived(small ? '' : 'md:gap-1 md:leading-7 md:left-2 md:bottom-2');
-	let costMd = $derived(small ? '' : 'md:p-1 md:rounded-sm');
-	let personMd = $derived(small ? '' : 'md:text-6xl md:right-2 md:top-2');
+	const buttonMd = $derived(small ? '' : 'md:w-32 md:h-32 md:text-4xl');
+	const pointsMd = $derived(small ? '' : 'md:text-6xl md:left-2 md:top-1');
+	const costsMd = $derived(small ? '' : 'md:gap-1 md:leading-7 md:left-2 md:bottom-2');
+	const costMd = $derived(small ? '' : 'md:p-1 md:rounded-sm');
+	const personMd = $derived(small ? '' : 'md:text-6xl md:right-2 md:top-2');
 </script>
 
 <button

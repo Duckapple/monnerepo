@@ -18,7 +18,7 @@
 		increment?: any;
 	}
 
-	let {
+	const {
 		color,
 		min = 0,
 		value = 0,
@@ -40,7 +40,7 @@
 	run(() => {
 		displayed_count.set(value);
 	});
-	let offset = $derived(modulo(displayed_count.current, 1));
+	const offset = $derived(modulo(displayed_count.current, 1));
 </script>
 
 <div

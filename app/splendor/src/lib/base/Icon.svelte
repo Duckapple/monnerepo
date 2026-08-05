@@ -6,7 +6,7 @@
 		icon: keyof typeof iconSvgs;
 		class?: ClassValue;
 	}
-	let { icon, class: className = 'size-5' }: Props = $props();
+	const { icon, class: className = 'size-5' }: Props = $props();
 </script>
 
 <svg

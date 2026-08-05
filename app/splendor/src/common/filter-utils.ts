@@ -6,7 +6,7 @@
  * const x = [{ a: true }, { a: null }, { a: undefined }, {}].filter(assertField('a'));
  * //    x = [{ a: true }] satisfies { a: boolean }[];
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+ 
 export function assertField<Field extends string, T extends { [K in Field]?: unknown }>(
 	field: Field
 ) {

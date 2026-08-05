@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { cardFromId } from '$common/defaults';
 
-	let { card = cardFromId(75), small = false, class: cn = '' } = $props();
+	const { card = cardFromId(75), small = false, class: cn = '' } = $props();
 
 	function getBoundingTiles(toCos: number, toSin: number) {
 		const cos = Math.cos((Math.PI * 12) / 180) * toCos;
@@ -15,21 +15,21 @@
 		(globalThis.window?.innerWidth ?? 0) < 768 || small ? [54, 86] : [189, 285]
 	);
 
-	let x = $derived(
+	const x = $derived(
 		globalThis.window?.innerWidth
 			? Math.ceil(getBoundingTiles(window.innerWidth, window.innerHeight) / cardSize[0])
 			: 0
 	);
-	let y = $derived(
+	const y = $derived(
 		globalThis.window?.innerHeight
 			? Math.ceil(getBoundingTiles(window.innerHeight, window.innerWidth) / cardSize[1])
 			: 0
 	);
 
-	let dX = $derived(
+	const dX = $derived(
 		globalThis.window?.innerWidth ? Math.sin((Math.PI * 12) / 180) ** 2 * window.innerWidth : 0
 	);
-	let dY = $derived(
+	const dY = $derived(
 		globalThis.window?.innerWidth
 			? Math.sin((Math.PI * 12) / 180) * Math.cos((Math.PI * 12) / 180) * window.innerWidth
 			: 0

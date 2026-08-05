@@ -30,7 +30,7 @@
 		onkeypress,
 	}: Props = $props();
 
-	let allActions = $derived([{ colorClass: '', text: 'Cancel', handler: closeModal }, ...actions]);
+	const allActions = $derived([{ colorClass: '', text: 'Cancel', handler: closeModal }, ...actions]);
 
 	let element = $state<HTMLDivElement>();
 

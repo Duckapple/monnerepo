@@ -6,7 +6,7 @@
 		onSuccess: () => void;
 	}
 
-	let { onSuccess }: Props = $props();
+	const { onSuccess }: Props = $props();
 
 	let userName = $state('');
 

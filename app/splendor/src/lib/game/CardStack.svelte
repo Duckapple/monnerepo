@@ -4,9 +4,9 @@
 		count?: number;
 	}
 
-	let { tier, count = 0 }: Props = $props();
+	const { tier, count = 0 }: Props = $props();
 
-	let stackSize = $derived(Math.min(3, count));
+	const stackSize = $derived(Math.min(3, count));
 </script>
 
 <div class="group h-[5.5rem] w-14 select-none md:h-48 md:w-32">

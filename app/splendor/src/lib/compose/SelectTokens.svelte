@@ -23,10 +23,10 @@
 		tryReturn,
 	}: Props = $props();
 
-	let takenOfEach = $derived(
+	const takenOfEach = $derived(
 		range(6).map((color) => tokens.filter((token) => token === color).length)
 	);
-	let leftOverOfEach = $derived((holdTokens ?? []).map((count, i) => count - takenOfEach[i]));
+	const leftOverOfEach = $derived((holdTokens ?? []).map((count, i) => count - takenOfEach[i]));
 </script>
 
 <div class="flex flex-col-reverse gap-4 pt-4 pb-2 md:gap-8 md:pt-2">

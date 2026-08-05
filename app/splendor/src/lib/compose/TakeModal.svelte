@@ -48,12 +48,12 @@
 		}
 	});
 
-	let takenOfEach = $derived(
+	const takenOfEach = $derived(
 		range(6).map((color) => tokens.filter((token) => token === color).length)
 	);
-	let leftOverOfEach = $derived((game?.tokens ?? []).map((count, i) => count - takenOfEach[i]));
+	const leftOverOfEach = $derived((game?.tokens ?? []).map((count, i) => count - takenOfEach[i]));
 
-	let tryTake = $derived((color: Color) => {
+	const tryTake = $derived((color: Color) => {
 		error = '';
 		let newTokens = [...tokens, color];
 
@@ -88,7 +88,7 @@
 	});
 
 	let returns = $state<Color[]>([]);
-	let shouldReturn = $derived(
+	const shouldReturn = $derived(
 		Math.max((player?.tokens.reduce((x, a) => x + a) ?? 0) + tokens.length, 10) - 10
 	);
 	let returnError = $state('');

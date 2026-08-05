@@ -15,14 +15,14 @@
 		phase: GamePhase | undefined;
 	}
 
-	let { player, turn, buyReserved, targetCardId, phase }: Props = $props();
+	const { player, turn, buyReserved, targetCardId, phase }: Props = $props();
 
-	let isUser = $derived($user?.id === player.userId);
+	const isUser = $derived($user?.id === player.userId);
 
-	let currentPlayer = $derived(isUser ? " - It's your turn!" : ' - Current player');
-	let handleBuyReserved = $derived(isUser ? buyReserved : () => {});
+	const currentPlayer = $derived(isUser ? " - It's your turn!" : ' - Current player');
+	const handleBuyReserved = $derived(isUser ? buyReserved : () => {});
 
-	let sorted = $derived(
+	const sorted = $derived(
 		(() => {
 			const sorted: CardType[][] = [[], [], [], [], [], []];
 			for (const cardId of player.cards) {
@@ -32,10 +32,10 @@
 			return sorted;
 		})()
 	);
-	let shownCards = $derived(sorted.slice(0, 5));
-	let persons = $derived(sorted[Color.Y]);
+	const shownCards = $derived(sorted.slice(0, 5));
+	const persons = $derived(sorted[Color.Y]);
 
-	let points = $derived(
+	const points = $derived(
 		sorted.reduce((acc, cards) => acc + cards.reduce((acc, card) => acc + card.p, 0), 0)
 	);
 </script>

@@ -9,7 +9,7 @@
 	import { TOKEN } from '$lib/main';
 	import { getWebSocket } from '$lib/web-socket.svelte';
 
-	let { children } = $props();
+	const { children } = $props();
 
 	const colorblind = useRuneContext(
 		'colorblind',

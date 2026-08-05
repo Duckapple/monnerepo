@@ -3,7 +3,7 @@
 	import { bgColorOf, fadeTextBgColorOf, gradientOf, iconOf } from '$lib/color';
 	import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
 	import Icon from '$lib/base/Icon.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { useRuneContext } from '$lib/state/context-rune.svelte';
 
 	interface Props {
@@ -18,7 +18,7 @@
 		autofocus?: boolean;
 	}
 
-	let {
+	const {
 		stacked = false,
 		card,
 		hideCost = false,
@@ -32,14 +32,14 @@
 
 	const colorBlind = useRuneContext('colorblind');
 
-	let filteredLength = $derived(card.cost.filter(Boolean).length);
+	const filteredLength = $derived(card.cost.filter(Boolean).length);
 	const cols = [
 		' grid-cols-1',
 		' grid-cols-1',
 		' grid-cols-2' + (!small ? ' md:grid-cols-1' : ''),
 		' grid-cols-2',
 	];
-	let secondPos = $derived(
+	const secondPos = $derived(
 		(() => {
 			let x = -1;
 			for (let i = 0; i < card.cost.length; i++) {
@@ -54,11 +54,11 @@
 			return x;
 		})()
 	);
-	let cardStyle = $derived(!small ? 'md:w-32 md:h-48 md:text-3xl' : '');
-	let pointStyle = $derived(!small ? 'md:py-0.5 md:px-2 md:text-6xl' : '');
-	let costStyle = $derived(!small ? 'md:text-2xl md:leading-5 md:pl-2 md:pb-2 md:w-20' : '');
+	const cardStyle = $derived(!small ? 'md:w-32 md:h-48 md:text-3xl' : '');
+	const pointStyle = $derived(!small ? 'md:py-0.5 md:px-2 md:text-6xl' : '');
+	const costStyle = $derived(!small ? 'md:text-2xl md:leading-5 md:pl-2 md:pb-2 md:w-20' : '');
 
-	let fadeText = $derived(card.p === 0);
+	const fadeText = $derived(card.p === 0);
 
 	let ref = $state<HTMLButtonElement>();
 	onMount(() => {

@@ -8,7 +8,7 @@
 		onpointerleave?: PointerEventHandler<HTMLButtonElement> | null;
 	}
 
-	let { size, children, onpointerenter, onpointerleave }: Props = $props();
+	const { size, children, onpointerenter, onpointerleave }: Props = $props();
 
 	const sizeClass = size === 'xl' ? 'text-xl size-7' : '';
 
