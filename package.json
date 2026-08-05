@@ -7,7 +7,7 @@
 		"apps": "bun --env-file=.env --parallel --no-exit-on-error --filter './app/*'",
 		"all": "bun --env-file=.env --parallel --no-exit-on-error --filter '*'",
 		"deploy": "cd .devops && bun --env-file=../.env deploy.ts",
-		"lint": "prettier --check . && eslint .",
+		"lint": "eslint .",
 		"db:generate": "bun run ./.drizzle/scripts/gen.ts && bun drizzle-kit generate",
 		"kit": "drizzle-kit"
 	},

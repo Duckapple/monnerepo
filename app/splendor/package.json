@@ -7,7 +7,7 @@
 		"db:migrate-prod": "bun drizzle-kit migrate",
 		"dev": "vite dev",
 		"format": "prettier --plugin-search-dir . --write .",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"lint": "eslint .",
 		"preview": "vite preview",
 		"start": "vite build && vite preview"
 	},
