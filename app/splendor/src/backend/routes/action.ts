@@ -130,9 +130,9 @@ function mergeKeyLengths<T extends Record<string, Array<unknown>>>(
 	obj: NoInfer<Partial<T> | undefined>,
 	fallback: T
 ) {
-	const res = {} as { [K in keyof T]: { length: number } };
+	const res = {} as { [K in keyof T]: T[K] };
 	for (const key of Object.keys(fallback)) {
-		res[key as keyof T] = { length: (obj?.[key] ?? fallback[key]).length };
+		res[key as keyof T] = { length: (obj?.[key] ?? fallback[key]).length } as T[keyof T];
 	}
 	return res;
 }

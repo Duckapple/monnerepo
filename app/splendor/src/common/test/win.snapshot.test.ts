@@ -1,4 +1,4 @@
-import { GameState, Player } from '../model';
+import type { GameState, Player } from '../model';
 
 export default {
 	game: {

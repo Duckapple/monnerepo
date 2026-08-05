@@ -1,7 +1,8 @@
 import { expect, it, describe } from 'bun:test';
 import { cardFromId } from '../defaults';
 import { canAfford, performAction } from '../logic';
-import { Action, Card, GamePhase, GameState, IdDecks, InnerAction, Player } from '../model';
+import { GamePhase } from '../model';
+import type { Action, Card, GameState, IdDecks, InnerAction, Player } from '../model';
 import winSnapshotTest from './win.snapshot.test';
 
 describe('performAction.buyCard', () => {
@@ -163,7 +164,7 @@ describe('performAction.buyCard', () => {
 		localAction.data.tokens = [0, 0, 4, 0, 0, 0];
 
 		const localPlayer: Player = { ...player, tokens: [0, 0, 2, 0, 0, 0] };
-		const cards = [];
+		const cards: number[] = [];
 		localPlayer.cards = [...cards];
 
 		const res = performAction(structuredClone(game), localPlayer, localAction);

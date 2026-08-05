@@ -6,7 +6,7 @@ export function useLocalStoreRune<T>(key: string): { value: T | null } {
 	if (browser) {
 		const data = localStorage.getItem(key);
 		if (data != null) {
-			state.value = JSON.parse(data);
+			state.value = JSON.parse(data) as T;
 		}
 	}
 

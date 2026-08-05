@@ -1,13 +1,13 @@
 import { expect, it, describe } from 'bun:test';
 import { performAction } from '../logic';
-import { GameState, InnerAction, Player } from '../model';
+import type { GameState, InnerAction, Player } from '../model';
 
 describe('performAction.takeTokens', () => {
 	const game: GameState = {
 		tokens: [7, 7, 7, 7, 7, 5],
 		turn: 0,
-		playerCount: 4,
-	} as any;
+    playerCount: 4,
+	} as Partial<GameState> as GameState;
 
 	const player: Player = { cards: [], reserved: [], tokens: [0, 0, 0, 0, 0, 0] };
 

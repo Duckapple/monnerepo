@@ -29,7 +29,8 @@ export default ts.config(
 					selector: 'TSEnumDeclaration',
 					message: "Don't declare enums",
 				},
-			],
+      ],
+			'prefer-const': ['error', { destructuring: 'all' }]
 		},
 	},
 	{

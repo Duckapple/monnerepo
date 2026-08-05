@@ -1,6 +1,7 @@
 import { expect, it, describe } from 'bun:test';
 import { performAction } from '../logic';
-import { Color, GameState, IdDecks, InnerAction, Player } from '../model';
+import { Color } from '../model';
+import type { GameState, IdDecks, InnerAction, Player } from '../model';
 
 describe('performAction.reserve', () => {
 	// +---------+
@@ -14,7 +15,7 @@ describe('performAction.reserve', () => {
 		tokens: [0, 0, 0, 0, 0, 4],
 		turn: 0,
 		playerCount: 4,
-	};
+	} as Partial<GameState> as GameState;
 	const player: Player = {
 		tokens: [0, 0, 0, 0, 0, 0],
 		cards: [],
@@ -31,11 +32,11 @@ describe('performAction.reserve', () => {
 
 	const result = {
 		game: {
-			piles: { low: [] },
-			shown: { low: [99, 99, 1, 99] },
+			piles: { low: [] as number[] } as IdDecks,
+			shown: { low: [99, 99, 1, 99] } as IdDecks,
 			tokens: [0, 0, 0, 0, 0, 3],
 			turn: 1,
-		} as any,
+		} as Partial<GameState> as GameState,
 		player: {
 			tokens: [0, 0, 0, 0, 0, 1],
 			reserved: [0],

@@ -42,10 +42,10 @@ export const user = derived(jwt, (jwt) => {
 	const [, data] = jwt?.split('.') ?? [];
 	if (data == null) return null;
 	try {
-		const { userName, id } = JSON.parse(atob(data));
+		const { userName, id } = JSON.parse(atob(data)) as Partial<Record<'id' | 'userName', string>>;
 		if (userName == null || id == null) return null;
 		return { userName, id };
-	} catch (e) {
+	} catch {
 		return null;
 	}
 });
@@ -66,7 +66,9 @@ export async function loginRegister(input: LoginInput, isRegister = false) {
 		throw error;
 	}
 
-	const newJwt = (await data.json()).jwt;
+	const newJwt = ((await data.json()) as { jwt?: string } | null)?.jwt;
+	if (!newJwt) throw new Error('Bad data');
+
 	jwt.set(newJwt);
 
 	return newJwt;
