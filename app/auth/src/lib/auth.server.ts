@@ -5,6 +5,7 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '../lib/db/db.server.ts';
+import { memeApi } from './plugins/meme-api.ts';
 import { AUTH_PORT, AUTH_ORIGIN } from '$env/static/public';
 import { env } from '$env/dynamic/private';
 
@@ -44,6 +45,7 @@ export const auth = betterAuth({
 				return usernameRegex.test(username);
 			},
 		}),
+		memeApi({ baseURL: env.MEME_API_URL }),
 		// Other plugins go above...
 		sveltekitCookies(getRequestEvent),
 	],
