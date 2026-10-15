@@ -9,3 +9,24 @@
 		0 100%
 	);
 }
+
+.defeat-sign {
+  transform: rotate(6deg)
+}
+
+.reveal-defeat .defeat-sign {
+	animation: 1s cubic-bezier(0.36, 0, 0.66, -0.56) forwards defeat-sign;
+}
+
+@keyframes defeat-sign {
+	30% {
+		transform: translate(calc(var(--funny, 5px) * 0.3), -100%);
+	}
+	70% {
+		opacity: 1;
+	}
+	100% {
+		transform: translate(var(--funny, 5px), 600%);
+		opacity: 0;
+	}
+}
