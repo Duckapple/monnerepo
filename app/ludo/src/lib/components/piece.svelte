@@ -1,7 +1,10 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { SvelteHTMLElements } from 'svelte/elements';
 
-	let { class: className, ...rest }: SvelteHTMLElements['div'] = $props();
+	type Props = SvelteHTMLElements['div'] & { children?: Snippet };
+
+	const { class: className, children, ...rest }: Props = $props();
 </script>
 
 <div class={['relative', className]} {...rest}>
@@ -12,4 +15,5 @@
 	<div
 		class="absolute top-1/4 left-1/2 size-1/2 -translate-1/2 rounded-full bg-current shadow-lg"
 	></div>
+	{@render children?.()}
 </div>
