@@ -11,9 +11,21 @@
 
 	let { manualLogOut = $bindable(), user }: Props = $props();
 
-	const accounts = $derived(
-		browser ? authClient.listAccounts({ fetchOptions: { throw: true } }) : null
-	);
+	const listAccounts = () => authClient.listAccounts({ fetchOptions: { throw: true } });
+	let accounts = $state(browser ? listAccounts() : null);
+
+	let temporaryPassword = $state('');
+	let memeApiOpen = $state(false);
+	let memeApiError = $state<string | null>(null);
+
+	async function linkMemeApi() {
+		const { error } = await authClient.memeApi.link({ temporaryPassword });
+		memeApiError = error?.message ?? null;
+		if (error) return;
+		temporaryPassword = '';
+		memeApiOpen = false;
+		accounts = listAccounts();
+	}
 </script>
 
 <div class="mx-4 flex flex-col gap-4 rounded-md border border-gray-200 bg-gray-50 p-4">
@@ -43,11 +55,14 @@
 						<svelte:boundary>
 							{@const id = (await accounts)?.find((acct) => acct.providerId === providerId)?.id}
 							<Button
-								onclick={() => {
+								onclick={async () => {
 									if (id) {
-										authClient.unlinkAccount({ providerId, accountId: id });
+										await authClient.unlinkAccount({ providerId, accountId: id });
+										accounts = listAccounts();
+									} else if (providerId === 'meme-api') {
+										memeApiOpen = !memeApiOpen;
 									} else {
-										authClient.signIn.social({ provider: providerId });
+										await authClient.signIn.social({ provider: providerId });
 									}
 								}}>{id ? 'Remove' : 'Connect'}</Button
 							>
@@ -57,6 +72,26 @@
 							{/snippet}
 						</svelte:boundary>
 					</li>
+					{#if providerId === 'meme-api' && memeApiOpen}
+						<li class="mt-1 list-none">
+							<p class="text-sm text-gray-500">
+								Ask the Meme API Discord bot to link this site, then paste its code below. Codes
+								expire after a minute.
+							</p>
+							<div class="mt-1 flex gap-2">
+								<input
+									class="w-full rounded-md border border-gray-400 px-2 py-1"
+									bind:value={temporaryPassword}
+									oninput={() => (memeApiError = null)}
+									placeholder="Code from Discord"
+								/>
+								<Button onclick={linkMemeApi} theme="primary">Link</Button>
+							</div>
+							{#if memeApiError}
+								<p class="text-red-500">{memeApiError}</p>
+							{/if}
+						</li>
+					{/if}
 				{/if}
 			{/if}
 		{/each}
